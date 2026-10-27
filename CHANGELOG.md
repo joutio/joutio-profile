@@ -1,3 +1,10 @@
+## 1.0.0 (2026-10-27)
+
+### Features
+
+* release Joutio profile 1.0.0 ([d84f10d](https://github.com/joutio/joutio-profile/commit/d84f10d45e9f16bad01ce69cbf593b8b2a6ab8d4))
+* release Joutio profile 1.0.0 ([86545ae](https://github.com/joutio/joutio-profile/commit/86545ae5df62d4abab53a3d863471358f0ae86f3))
+
 ## [6.1.1](https://github.com/joutio/joutio-profile/compare/v6.1.0...v6.1.1) (2026-10-26)
 
 ### Bug Fixes
