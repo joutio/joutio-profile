@@ -1,0 +1,59 @@
+package com.joutio.profile.domain.model;
+
+import com.joutio.microservice.core.domain.model.i18n.Language;
+import lombok.Builder;
+
+import java.time.Instant;
+import java.util.List;
+
+/**
+ * Modèle domaine représentant le profil modifiable d'un utilisateur.
+ * L'email est dénormalisé depuis identity pour permettre la recherche.
+ * Immuable par convention (record).
+ */
+@Builder(toBuilder = true)
+public record Profile(
+        String userId,
+        String email,
+        String pseudonym,
+        String bio,
+        String country,
+        String avatarOptions,
+        String bannerUrl,
+        /** Clé du titre thématique **porté** (`topicId:TIER`, cf. {@link PlayerTitle}) ; null = aucun. */
+        String equippedTitle,
+        Language language,
+        Instant createdAt,
+        Instant updatedAt,
+        /** Date de fin (ou skip) de l'onboarding ; {@code null} = parcours encore requis. */
+        Instant onboardingCompletedAt,
+        /**
+         * Centres d'intérêt du joueur : codes {@code TopicCategory} ordonnés (le premier est
+         * l'univers principal), au maximum {@link ProfileRules#MAX_INTERESTS}. Jamais {@code null}.
+         */
+        List<String> interests
+) {
+
+    public Profile {
+        interests = interests == null ? List.of() : List.copyOf(interests);
+    }
+
+    /**
+     * Constructeur de compatibilité pour les anciens snapshots/tests sans intérêts
+     * (le flag onboarding est conservé).
+     */
+    public Profile(String userId, String email, String pseudonym, String bio, String country,
+                   String avatarOptions, String bannerUrl, String equippedTitle, Language language,
+                   Instant createdAt, Instant updatedAt, Instant onboardingCompletedAt) {
+        this(userId, email, pseudonym, bio, country, avatarOptions, bannerUrl, equippedTitle,
+                language, createdAt, updatedAt, onboardingCompletedAt, List.of());
+    }
+
+    /** Constructeur de compatibilité pour les anciens snapshots/tests sans flag onboarding. */
+    public Profile(String userId, String email, String pseudonym, String bio, String country,
+                   String avatarOptions, String bannerUrl, String equippedTitle, Language language,
+                   Instant createdAt, Instant updatedAt) {
+        this(userId, email, pseudonym, bio, country, avatarOptions, bannerUrl, equippedTitle,
+                language, createdAt, updatedAt, null, List.of());
+    }
+}

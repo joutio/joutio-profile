@@ -1,0 +1,69 @@
+package com.joutio.profile.application.saga;
+
+import com.joutio.microservice.core.domain.constant.JoutioConstants;
+import com.joutio.profile.domain.command.ProgressionCommand;
+import com.joutio.profile.domain.event.ProgressionEvent;
+import com.joutio.profile.domain.model.ProgressionRules;
+import com.joutio.profile.infrastructure.properties.AppProperties;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.config.ProcessingGroup;
+import org.axonframework.modelling.saga.SagaEventHandler;
+import org.axonframework.modelling.saga.SagaLifecycle;
+import org.axonframework.modelling.saga.StartSaga;
+import org.axonframework.spring.stereotype.Saga;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.ZoneId;
+import java.util.Objects;
+
+/**
+ * AwardBadgesSaga — déclenche l'évaluation des **badges** d'un joueur à la fin d'un duel.
+ *
+ * <p>Consomme {@link ProgressionEvent.XpAwardedEvent} (émis par la progression, il porte tous les
+ * faits du duel : sujet, XP, score, victoire, entraînement, réponses rapides) et envoie un
+ * {@link ProgressionCommand.EvaluateBadgesCommand} à l'agrégat dédié {@code badges:<userId>}.
+ * Saga **sans état** : elle se termine aussitôt (l'idempotence est portée par l'agrégat, par
+ * {@code gameId}).</p>
+ */
+@Saga
+@ProcessingGroup("award-badges-saga")
+public class AwardBadgesSaga {
+
+    private static final Logger logger = LoggerFactory.getLogger(AwardBadgesSaga.class);
+
+    @Autowired
+    private transient CommandGateway commandGateway;
+
+    /** Fuseau d'activité : le jour local du duel est préparé ici (l'agrégat reste pur). */
+    @Autowired
+    private transient AppProperties appProperties;
+
+    @StartSaga
+    @SagaEventHandler(associationProperty = "userId")
+    public void on(ProgressionEvent.XpAwardedEvent event) {
+        if (event.userId() == null
+                || Objects.equals(JoutioConstants.SYSTEM_USER_ID, event.userId())) {
+            SagaLifecycle.end();
+            return;
+        }
+
+        ZoneId zone = ZoneId.of(appProperties.activity().zone());
+        commandGateway.send(new ProgressionCommand.EvaluateBadgesCommand(
+                ProgressionRules.badgeIdFor(event.userId()),
+                event.userId(),
+                event.gameId(),
+                event.topicId(),
+                event.xp(),
+                event.gameScore(),
+                event.won(),
+                event.botGame(),
+                event.fastAnswers(),
+                event.imageCorrectAnswers(),
+                event.awardedAt().atZone(zone).toLocalDate()
+        ));
+        logger.debug("Badges évalués: userId={}, gameId={}", event.userId(), event.gameId());
+        SagaLifecycle.end();
+    }
+}

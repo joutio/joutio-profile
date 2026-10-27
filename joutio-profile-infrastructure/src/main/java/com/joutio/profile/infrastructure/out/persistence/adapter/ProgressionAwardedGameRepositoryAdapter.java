@@ -1,0 +1,44 @@
+package com.joutio.profile.infrastructure.out.persistence.adapter;
+
+import com.joutio.profile.domain.model.GameXp;
+import com.joutio.profile.domain.port.out.ProgressionAwardedGameRepositoryPort;
+import com.joutio.profile.infrastructure.out.persistence.entity.ProgressionAwardedGameEntity;
+import com.joutio.profile.infrastructure.out.persistence.repository.ProgressionAwardedGameJpaRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Component
+public class ProgressionAwardedGameRepositoryAdapter implements ProgressionAwardedGameRepositoryPort {
+
+    private final ProgressionAwardedGameJpaRepository repository;
+
+    public ProgressionAwardedGameRepositoryAdapter(ProgressionAwardedGameJpaRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    @Transactional
+    public boolean record(String userId, String gameId, int xp, int ratingDelta, boolean rated) {
+        ProgressionAwardedGameEntity.AwardedGameId id =
+                new ProgressionAwardedGameEntity.AwardedGameId(userId, gameId);
+        if (repository.existsById(id)) {
+            return false;
+        }
+        repository.save(new ProgressionAwardedGameEntity(userId, gameId, xp, ratingDelta, rated));
+        return true;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GameXp> findGameXp(String userId, List<String> gameIds) {
+        if (gameIds.isEmpty()) {
+            return List.of();
+        }
+        return repository.findByUserIdAndGameIdIn(userId, gameIds).stream()
+                .map(entity -> new GameXp(entity.getGameId(), entity.getXp(),
+                        entity.getRatingDelta(), entity.isRated()))
+                .toList();
+    }
+}

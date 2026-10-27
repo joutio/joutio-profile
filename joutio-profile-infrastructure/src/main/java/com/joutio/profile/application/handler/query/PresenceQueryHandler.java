@@ -1,0 +1,33 @@
+package com.joutio.profile.application.handler.query;
+
+import com.joutio.microservice.core.infrastructure.in.api.response.SearchResponse;
+import com.joutio.profile.domain.model.PlayerPresence;
+import com.joutio.profile.domain.port.out.PresenceRepositoryPort;
+import com.joutio.profile.domain.query.PresenceQuery;
+import org.axonframework.queryhandling.QueryHandler;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+/**
+ * Handler Axon — recherche paginée de présences. Délègue au port sortant.
+ */
+@Component
+public class PresenceQueryHandler {
+
+    private final PresenceRepositoryPort presenceRepositoryPort;
+
+    public PresenceQueryHandler(PresenceRepositoryPort presenceRepositoryPort) {
+        this.presenceRepositoryPort = presenceRepositoryPort;
+    }
+
+    @QueryHandler
+    public SearchResponse<PlayerPresence> handle(PresenceQuery.PresenceSearchQuery query) {
+        return presenceRepositoryPort.findAll(query.request());
+    }
+
+    @QueryHandler
+    public List<PlayerPresence> handle(PresenceQuery.GetPresencesByIdsQuery query) {
+        return presenceRepositoryPort.findByIds(query.userIds());
+    }
+}

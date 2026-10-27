@@ -1,0 +1,17 @@
+server:
+  port: 8088
+
+spring:
+  config:
+    import: optional:classpath:joutio-local.yml
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/joutio_profile
+    username: postgres
+    password: postgres
+
+app:
+  seed-data:
+    enabled: true

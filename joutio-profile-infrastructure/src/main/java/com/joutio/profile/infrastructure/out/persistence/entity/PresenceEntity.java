@@ -1,0 +1,43 @@
+package com.joutio.profile.infrastructure.out.persistence.entity;
+
+import com.joutio.microservice.core.domain.model.search.FieldType;
+import com.joutio.microservice.core.domain.model.search.Searchable;
+import com.joutio.profile.domain.model.PresenceStatus;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.Instant;
+
+/**
+ * Entité JPA de la présence joueur (read-model éphémère, mis à jour par le cycle de vie des
+ * sessions temps réel). {@code offlineDeadlineAt} arme l'échéance de passage hors ligne
+ * confirmée par le balayeur périodique. Champs {@code @Searchable} : filtrage/tri standards via
+ * {@code POST /api/presence/search}.
+ */
+@Getter
+@Setter
+@Entity
+@Table(name = "presence_entry", indexes = {
+        @Index(name = "idx_presence_entry_status", columnList = "status"),
+        @Index(name = "idx_presence_entry_last_seen", columnList = "last_seen_at"),
+        @Index(name = "idx_presence_entry_offline_deadline", columnList = "offline_deadline_at")
+})
+public class PresenceEntity {
+
+    @Id
+    @Column(name = "user_id", nullable = false)
+    @Searchable(type = FieldType.STRING)
+    private String userId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 10)
+    private PresenceStatus status;
+
+    @Column(name = "last_seen_at")
+    @Searchable(type = FieldType.DATE)
+    private Instant lastSeenAt;
+
+    @Column(name = "offline_deadline_at")
+    private Instant offlineDeadlineAt;
+}

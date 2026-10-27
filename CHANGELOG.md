@@ -1,0 +1,440 @@
+## [6.1.1](https://github.com/joutio/joutio-profile/compare/v6.1.0...v6.1.1) (2026-10-26)
+
+### Bug Fixes
+
+* **profile:** aligne les contrats game et matchmaking sur les versions publiées ([3ba86a9](https://github.com/joutio/joutio-profile/commit/3ba86a9eae6ac00e265183bfac808ef39bc2159a))
+
+## [6.1.0](https://github.com/joutio/joutio-profile/compare/v6.0.0...v6.1.0) (2026-10-26)
+
+### Features
+
+* **profile:** persiste les centres d'intérêt ([05fa9c0](https://github.com/joutio/joutio-profile/commit/05fa9c05b98b7546b16870ea0aa29bc0c905d6fb))
+
+## [6.0.0](https://github.com/joutio/joutio-profile/compare/v5.1.0...v6.0.0) (2026-10-25)
+
+### ⚠ BREAKING CHANGES
+
+* **profile:** les clés de titres et les valeurs de maîtrise passent de
+NOVICE…LEGENDE à FER…DIAMANT ; l'event store doit être réinitialisé.
+
+### Features
+
+* **profile:** remplace les grades par les paliers de rareté ([adf5732](https://github.com/joutio/joutio-profile/commit/adf5732d0cba0f9eed57a945a7375d2c725bcf03))
+
+## [5.1.0](https://github.com/joutio/joutio-profile/compare/v5.0.0...v5.1.0) (2026-10-23)
+
+### Features
+
+* **profile:** expose le détail et le catalogue des récompenses ([64d54be](https://github.com/joutio/joutio-profile/commit/64d54bea7fa7cd51d191394547ead9e42ad6de1f))
+
+## [5.0.0](https://github.com/joutio/joutio-profile/compare/v4.12.0...v5.0.0) (2026-10-23)
+
+### ⚠ BREAKING CHANGES
+
+* **profile:** débloque Micah par récompense et supprime l'XP globale
+
+### Features
+
+* **profile:** débloque Micah par récompense et supprime l'XP globale ([01f1c50](https://github.com/joutio/joutio-profile/commit/01f1c500dc151aebcbe218733488fa824d7cdc3c))
+
+## [4.12.0](https://github.com/joutio/joutio-profile/compare/v4.11.1...v4.12.0) (2026-10-23)
+
+### Features
+
+* **profile:** durcit l'obtention des badges et des titres ([748bf09](https://github.com/joutio/joutio-profile/commit/748bf09198b475e6d3ba52214c1f8524b289b403))
+
+## [4.11.1](https://github.com/joutio/joutio-profile/compare/v4.11.0...v4.11.1) (2026-10-23)
+
+### Bug Fixes
+
+* **profile:** évite le rejeu historique du marquage onboarding ([8a1ceba](https://github.com/joutio/joutio-profile/commit/8a1ceba5bb755a4a69fe5c33a9346c11f65e374b))
+
+## [4.11.0](https://github.com/joutio/joutio-profile/compare/v4.10.0...v4.11.0) (2026-10-23)
+
+### Features
+
+* **profile:** ajoute le flag serveur de fin d'onboarding ([7d1dc2d](https://github.com/joutio/joutio-profile/commit/7d1dc2d7fba4e68537276f9ce83dc60f878b9673))
+
+## [4.10.0](https://github.com/joutio/joutio-profile/compare/v4.9.4...v4.10.0) (2026-10-22)
+
+### Features
+
+* **account:** efface le profil, la progression et la présence à la suppression du compte ([e173235](https://github.com/joutio/joutio-profile/commit/e17323575dfd053a31cb7eb80d4cdba7f39737be))
+
+## [4.9.4](https://github.com/joutio/joutio-profile/compare/v4.9.3...v4.9.4) (2026-10-22)
+
+### Bug Fixes
+
+* **profile:** série de jours effective et entraînements exclus ([b63eebd](https://github.com/joutio/joutio-profile/commit/b63eebd70651de4419feafa7318c91a1c2f6599c))
+
+## [4.9.3](https://github.com/joutio/joutio-profile/compare/v4.9.2...v4.9.3) (2026-10-21)
+
+### Bug Fixes
+
+* **profile:** journalise le gain Elo par partie ([374191a](https://github.com/joutio/joutio-profile/commit/374191a63a9d0e46d5fa69248c2c9a9412b4b23d))
+
+## [4.9.2](https://github.com/joutio/joutio-profile/compare/v4.9.1...v4.9.2) (2026-10-21)
+
+### Bug Fixes
+
+* **profile:** attribue l'Elo dans un handler synchrone ([9c174f2](https://github.com/joutio/joutio-profile/commit/9c174f2fa04e32da25d242fa1eb7dc4b66a3ef06))
+
+## [4.9.1](https://github.com/joutio/joutio-profile/compare/v4.9.0...v4.9.1) (2026-10-21)
+
+### Bug Fixes
+
+* **profile:** aligne les contrats sur les dernières releases ([8557602](https://github.com/joutio/joutio-profile/commit/8557602b486ea297384f99042a67394c661b355f))
+
+## [4.9.0](https://github.com/joutio/joutio-profile/compare/v4.8.2...v4.9.0) (2026-10-21)
+
+### Features
+
+* **profile:** ajoute l'Elo global du joueur ([25acc6d](https://github.com/joutio/joutio-profile/commit/25acc6da0634b1d60dc2b0278262bd3e05fa00ab))
+
+## [4.8.2](https://github.com/joutio/joutio-profile/compare/v4.8.1...v4.8.2) (2026-10-17)
+
+### Bug Fixes
+
+* **profile:** rend la série de victoires globale pour les badges ([969e4b7](https://github.com/joutio/joutio-profile/commit/969e4b7e8ddaf2dc2fe5e821996958ca260e826b))
+
+## [4.8.1](https://github.com/joutio/joutio-profile/compare/v4.8.0...v4.8.1) (2026-10-17)
+
+### Bug Fixes
+
+* **profile:** renomme le badge Triomphateur en Champion ([be52515](https://github.com/joutio/joutio-profile/commit/be5251540651eb685a008c94d54bb05193dc65a1))
+
+## [4.8.0](https://github.com/joutio/joutio-profile/compare/v4.7.0...v4.8.0) (2026-10-17)
+
+### Features
+
+* **profile:** palier Fer et rang des titres ([43952e2](https://github.com/joutio/joutio-profile/commit/43952e2865c2be31ce0c575aaefb6a2551a7432f))
+
+## [4.7.0](https://github.com/joutio/joutio-profile/compare/v4.6.0...v4.7.0) (2026-10-16)
+
+### Features
+
+* **profile:** badge Defis credite quand le defi a abouti sur une partie ([203f754](https://github.com/joutio/joutio-profile/commit/203f75402e677f0fab7ccb7f34721c32ab0a09a8))
+
+## [4.6.0](https://github.com/joutio/joutio-profile/compare/v4.5.0...v4.6.0) (2026-10-16)
+
+### Features
+
+* **profile:** badges et titres acquis uniquement en parties contre des humains ([3edb233](https://github.com/joutio/joutio-profile/commit/3edb233e21970c6c3037d26794e98fd90d9489f4))
+
+## [4.5.0](https://github.com/joutio/joutio-profile/compare/v4.4.0...v4.5.0) (2026-10-16)
+
+### Features
+
+* **profile:** famille VICTORY — une famille par échelle de badges ([a51bb99](https://github.com/joutio/joutio-profile/commit/a51bb991bedffbd4524c612f5de4c0f0ae89e585))
+
+## [4.4.0](https://github.com/joutio/joutio-profile/compare/v4.3.0...v4.4.0) (2026-10-15)
+
+### Features
+
+* **profile:** annonce du grade de maitrise franchi (titre thematique) ([eedecd8](https://github.com/joutio/joutio-profile/commit/eedecd84e197ec1a0a559f9e7758d06bc7dae225))
+
+## [4.3.0](https://github.com/joutio/joutio-profile/compare/v4.2.0...v4.3.0) (2026-10-15)
+
+### Features
+
+* **profile:** six paliers de badges (bronze a diamant) ([d4a88ba](https://github.com/joutio/joutio-profile/commit/d4a88ba88e12fc4f9cbe3b0579cd2374eb1ca6c2))
+
+## [4.2.0](https://github.com/joutio/joutio-profile/compare/v4.1.0...v4.2.0) (2026-10-15)
+
+### Features
+
+* **profile:** badge Vision (questions illustrees) ([12d2cdd](https://github.com/joutio/joutio-profile/commit/12d2cdd8f9fbdc0d9ec29e4411dce2b884bdc44e))
+
+## [4.1.0](https://github.com/joutio/joutio-profile/compare/v4.0.0...v4.1.0) (2026-10-15)
+
+### Features
+
+* **profile:** badge Assiduite (serie de jours joues) ([47adf43](https://github.com/joutio/joutio-profile/commit/47adf435bf558bdcfc4593364d3dfcf9a32f4de9))
+* **profile:** badges Precision et Rapidite ([8c6b576](https://github.com/joutio/joutio-profile/commit/8c6b576b1cdb2a01b2ebe17f55e53766d497f41e))
+* **profile:** badges Social et Defis ([90ef9ba](https://github.com/joutio/joutio-profile/commit/90ef9babfeee2485df4c500b4a1772873d357fb3))
+
+## [4.0.0](https://github.com/joutio/joutio-profile/compare/v3.10.0...v4.0.0) (2026-10-15)
+
+### ⚠ BREAKING CHANGES
+
+* **profile:** badges dans un agregat dedie + famille Serie
+
+### Features
+
+* **profile:** badges dans un agregat dedie + famille Serie ([1805c46](https://github.com/joutio/joutio-profile/commit/1805c46c4af9917f942c50e5a558f509e643ec0e))
+
+## [3.10.0](https://github.com/joutio/joutio-profile/compare/v3.9.0...v3.10.0) (2026-10-15)
+
+### Features
+
+* **profile:** badges d'exploration (sujets joués) ([d5c1c35](https://github.com/joutio/joutio-profile/commit/d5c1c35c4486458d2569c824203e3323ebe73d7c))
+
+## [3.9.0](https://github.com/joutio/joutio-profile/compare/v3.8.1...v3.9.0) (2026-10-14)
+
+### Features
+
+* **progression:** courbe explicite, grades de maîtrise, catalogue de badges et titre porté ([c7ed6d8](https://github.com/joutio/joutio-profile/commit/c7ed6d84d626e66ec6d637c3732014d25e3ff939))
+
+## [3.8.1](https://github.com/joutio/joutio-profile/compare/v3.8.0...v3.8.1) (2026-10-14)
+
+### Bug Fixes
+
+* **profile:** migration V8 pour les parties par thème (conflit Flyway avec V7) ([e940b7a](https://github.com/joutio/joutio-profile/commit/e940b7aeb4cb00907c606cf6f7db410d6e37fec9))
+
+## [3.8.0](https://github.com/joutio/joutio-profile/compare/v3.7.0...v3.8.0) (2026-10-13)
+
+### Features
+
+* **profile:** parties humaines par thème (donut « Sujets joués ») ([bbed79e](https://github.com/joutio/joutio-profile/commit/bbed79efdd1434f3299da86c11baf3de0917dc1f))
+
+## [3.7.0](https://github.com/joutio/joutio-profile/compare/v3.6.0...v3.7.0) (2026-10-13)
+
+### Features
+
+* **profile:** comptage des références de bannière (console média admin) ([373f206](https://github.com/joutio/joutio-profile/commit/373f206b0077cecbc80c92e9f01553c68d83a211))
+
+## [3.6.0](https://github.com/joutio/joutio-profile/compare/v3.5.1...v3.6.0) (2026-10-12)
+
+### Features
+
+* **profile:** bannière de profil (bannerUrl) ([bb133b7](https://github.com/joutio/joutio-profile/commit/bb133b711474791b20dd196b3a27e07c3c34fa2b))
+
+## [3.5.1](https://github.com/joutio/joutio-profile/compare/v3.5.0...v3.5.1) (2026-10-12)
+
+### Bug Fixes
+
+* **profile:** contrats game-domain 8.3.0 / identity-domain 2.5.0 (élagués) ([9912634](https://github.com/joutio/joutio-profile/commit/9912634676cf9b0aa7e701db8194f129dc6af195))
+
+## [3.5.0](https://github.com/joutio/joutio-profile/compare/v3.4.0...v3.5.0) (2026-10-12)
+
+### Features
+
+* **console:** consume joutio-sdk 4.7.0 (lag, commandes en vol, snapshots, scheduled) ([ffbfe63](https://github.com/joutio/joutio-profile/commit/ffbfe63a6a676973e5a86b7f39291b6e382e5078))
+
+## [3.4.0](https://github.com/joutio/joutio-profile/compare/v3.3.0...v3.4.0) (2026-10-12)
+
+### Features
+
+* **console:** consume joutio-sdk 4.6.0 (build-info + API interne event store/scheduled) ([d853a19](https://github.com/joutio/joutio-profile/commit/d853a19f2447edfa63fb0b628427e47d128cf5dd))
+
+## [3.3.0](https://github.com/joutio/joutio-profile/compare/v3.2.1...v3.3.0) (2026-10-12)
+
+### Features
+
+* **console:** consume joutio-sdk 4.5.2 (DLQ Axon par défaut + agent console) ([ebc2d73](https://github.com/joutio/joutio-profile/commit/ebc2d730f0929f426d0bd84c6615125d800e2263))
+
+## [3.2.1](https://github.com/joutio/joutio-profile/compare/v3.2.0...v3.2.1) (2026-10-11)
+
+### Performance Improvements
+
+* **profile:** sagas CreateProfile/AwardProgress en fire-and-forget ([3952e61](https://github.com/joutio/joutio-profile/commit/3952e6101b8b4056f5d0f3123b77835893fd1cd3))
+
+## [3.2.0](https://github.com/joutio/joutio-profile/compare/v3.1.2...v3.2.0) (2026-10-08)
+
+### Features
+
+* **profile:** bail de session de presence (TTL + renouvellement BFF) ([e8f7fd5](https://github.com/joutio/joutio-profile/commit/e8f7fd5aa85d5fa9b800c3fb428e84b90d545384))
+
+## [3.1.2](https://github.com/joutio/joutio-profile/compare/v3.1.1...v3.1.2) (2026-10-07)
+
+### Reverts
+
+* Revert "feat(presence): leases de session redis (source de verite de la presence)" ([e0c4395](https://github.com/joutio/joutio-profile/commit/e0c4395b3aec41cd5812a721760b1851b6ab4cd6))
+
+## [3.1.1](https://github.com/joutio/joutio-profile/compare/v3.1.0...v3.1.1) (2026-10-07)
+
+### Bug Fixes
+
+* **deps:** pin joutio-game-domain 5.2.0 (version publiée) ([a7c86ce](https://github.com/joutio/joutio-profile/commit/a7c86ceaeffcd86ece3de788bd88875c77c84f96))
+
+## [3.1.0](https://github.com/joutio/joutio-profile/compare/v3.0.0...v3.1.0) (2026-10-07)
+
+### Features
+
+* **presence:** leases de session redis (source de verite de la presence) ([f60b09a](https://github.com/joutio/joutio-profile/commit/f60b09a9db9b80a5276ae232484a35f086c8ad18))
+
+## [3.0.0](https://github.com/joutio/joutio-profile/compare/v2.1.0...v3.0.0) (2026-09-30)
+
+### ⚠ BREAKING CHANGES
+
+* **profile:** UpdateProfileCommand/ProfileUpdatedEvent removed; one command/event per field (pseudonym, bio, country, avatarOptions, language); Profile.displayName renamed to pseudonym; V1 migration edited (DB reset required).
+
+### Features
+
+* **profile:** per-field profile updates with pseudonym and language ([45859a3](https://github.com/joutio/joutio-profile/commit/45859a3f09042366daabdeb92dee67fe5970340a))
+
+## [2.1.0](https://github.com/joutio/joutio-profile/compare/v2.0.0...v2.1.0) (2026-09-27)
+
+### Features
+
+* **profile:** presence read model, per-game XP journal and honest duel stats ([647760c](https://github.com/joutio/joutio-profile/commit/647760c0f7de783d1c79e27e4154cc1e21d31cbc))
+
+## [2.0.0](https://github.com/joutio/joutio-profile/compare/v1.8.3...v2.0.0) (2026-09-25)
+
+### ⚠ BREAKING CHANGES
+
+* **profile:** the service no longer exposes its REST/WS; presence is now
+driven by the BFF (STOMP sessions -> commands). Search/query contracts use the
+SDK SearchRequest/SearchResponse DTOs.
+
+### Features
+
+* **profile:** headless service, BFF-owned presence + SDK search contracts ([368142e](https://github.com/joutio/joutio-profile/commit/368142e9ecd0ac4b8b322c944a0b2e4d78ec17d4))
+
+## [1.8.3](https://github.com/joutio/joutio-profile/compare/v1.8.2...v1.8.3) (2026-09-24)
+
+### Bug Fixes
+
+* **deps:** bump joutio-parent to 2.4.4 (typed PageResult over query transport) ([9de9537](https://github.com/joutio/joutio-profile/commit/9de953765065c1492f244ef5834669732370b217))
+
+## [1.8.2](https://github.com/joutio/joutio-profile/compare/v1.8.1...v1.8.2) (2026-09-24)
+
+### Bug Fixes
+
+* **deps:** bump joutio-parent to 2.4.3 (bus-only search criteria type info) ([e236316](https://github.com/joutio/joutio-profile/commit/e236316e8fa3e8a6309b32e4015f987af77684a4))
+
+## [1.8.1](https://github.com/joutio/joutio-profile/compare/v1.8.0...v1.8.1) (2026-09-24)
+
+### Bug Fixes
+
+* **deps:** bump joutio-parent to 2.4.2 (search criteria type info) ([2f88ac4](https://github.com/joutio/joutio-profile/commit/2f88ac44cdc7f3b901175b9b4d37086254edf959))
+
+## [1.8.0](https://github.com/joutio/joutio-profile/compare/v1.7.0...v1.8.0) (2026-09-24)
+
+### Features
+
+* **profile:** batch queries for profiles and progressions by ids ([f333534](https://github.com/joutio/joutio-profile/commit/f33353473fd6fce11e782392255f94c15de1f4bd))
+
+## [1.7.0](https://github.com/joutio/joutio-profile/compare/v1.6.4...v1.7.0) (2026-09-23)
+
+### Features
+
+* **profile:** add avatarOptions to profile (DiceBear micah) ([ff47985](https://github.com/joutio/joutio-profile/commit/ff47985cf0c12214a65ad34ec2c41ea54ae50bbe))
+
+## [1.6.4](https://github.com/joutio/joutio-profile/compare/v1.6.3...v1.6.4) (2026-09-22)
+
+### Bug Fixes
+
+* **joutio-profile:** upgrade joutio-parent to 2.3.4 ([62ede7c](https://github.com/joutio/joutio-profile/commit/62ede7c864290fb5f9d80402a32f83ea9fdb0060))
+
+## [1.6.3](https://github.com/joutio/joutio-profile/compare/v1.6.2...v1.6.3) (2026-09-22)
+
+### Bug Fixes
+
+* **joutio-profile:** upgrade joutio-parent to 2.3.3 ([d40472c](https://github.com/joutio/joutio-profile/commit/d40472c39ee80655b4e892e4d9f7e40c5e615c41))
+
+## [1.6.2](https://github.com/joutio/joutio-profile/compare/v1.6.1...v1.6.2) (2026-09-22)
+
+### Bug Fixes
+
+* **joutio-profile:** upgrade joutio-parent to 2.3.2 ([1792dcb](https://github.com/joutio/joutio-profile/commit/1792dcb8a2479825701b17bec5d9459b44c71d8a))
+
+## [1.6.1](https://github.com/joutio/joutio-profile/compare/v1.6.0...v1.6.1) (2026-09-22)
+
+### Bug Fixes
+
+* **profile:** upgrade joutio-parent to 2.3.1 (registration address fix) ([31da1e2](https://github.com/joutio/joutio-profile/commit/31da1e2d80c8ea5a3e435c78de09a795bbdfaa45))
+
+## [1.6.0](https://github.com/joutio/joutio-profile/compare/v1.5.2...v1.6.0) (2026-09-22)
+
+### Features
+
+* **profile:** explicit Axon processing groups and default seeding ([f2b705e](https://github.com/joutio/joutio-profile/commit/f2b705ed3dcb3e20cdc33fc5ba7df10bb3be3201))
+
+## [1.5.2](https://github.com/joutio/joutio-profile/compare/v1.5.1...v1.5.2) (2026-09-21)
+
+### Bug Fixes
+
+* **progression:** create progression row before awarded-game journal ([e19d51d](https://github.com/joutio/joutio-profile/commit/e19d51d85ba3974a6b0c7b2b2848edd2b957284f))
+
+## [1.5.1](https://github.com/joutio/joutio-profile/compare/v1.5.0...v1.5.1) (2026-09-21)
+
+### Bug Fixes
+
+* **config:** honor JOUTIO_SEED_DATA_ENABLED in prod (seed system profile/topics) ([648ed3a](https://github.com/joutio/joutio-profile/commit/648ed3a7d129cd6a8260baca881fc20a5d29e793))
+
+## [1.5.0](https://github.com/joutio/joutio-profile/compare/v1.4.7...v1.5.0) (2026-09-21)
+
+### Features
+
+* **progression:** idempotent XP and activity, enforce profile ownership ([e8ade9d](https://github.com/joutio/joutio-profile/commit/e8ade9d9b854f8491781b9e503616c9ad5f491e9))
+
+### Bug Fixes
+
+* **observability:** keep readable console logs in local ([df098a0](https://github.com/joutio/joutio-profile/commit/df098a0594e5be7a4ddd90e0fcc7d6ab4c030db9))
+
+## [1.4.7](https://github.com/joutio/joutio-profile/compare/v1.4.6...v1.4.7) (2026-09-20)
+
+### Bug Fixes
+
+* **deps:** bump joutio-sdk to 2.1.1 ([1cc5fae](https://github.com/joutio/joutio-profile/commit/1cc5fae7fc644f636c399c8a19bc3c35aac73b53))
+
+## [1.4.6](https://github.com/joutio/joutio-profile/compare/v1.4.5...v1.4.6) (2026-09-20)
+
+### Bug Fixes
+
+* **config:** align prod service URLs with joutio-* names ([06cdea4](https://github.com/joutio/joutio-profile/commit/06cdea4865a48b10b29ab489d5cafa0a25a06ea4))
+
+## [1.4.5](https://github.com/joutio/joutio-profile/compare/v1.4.4...v1.4.5) (2026-09-20)
+
+### Bug Fixes
+
+* **deps:** bump joutio-sdk to 2.1.0 ([3e926b5](https://github.com/joutio/joutio-profile/commit/3e926b5b7040f20d17810744da2ae5dd5bb63763))
+
+## [1.4.4](https://github.com/joutio/joutio-profile/compare/v1.4.3...v1.4.4) (2026-09-20)
+
+### Bug Fixes
+
+* **system:** use the unified system account ([3d4bdbc](https://github.com/joutio/joutio-profile/commit/3d4bdbcbfeeb5bc795f10bbdfd2b773b778ae8a7))
+
+## [1.4.3](https://github.com/joutio/joutio-profile/compare/v1.4.2...v1.4.3) (2026-09-20)
+
+### Bug Fixes
+
+* **observability:** remove WebSocket and business KPI metrics (consume joutio-sdk 1.4.3) ([c5118f9](https://github.com/joutio/joutio-profile/commit/c5118f9a3388b826c56eafbadc1f21cdff9db042))
+
+## [1.4.2](https://github.com/joutio/joutio-profile/compare/v1.4.1...v1.4.2) (2026-09-20)
+
+### Bug Fixes
+
+* **presence:** schedule offline deadline with NoScopeDescriptor ([71babc5](https://github.com/joutio/joutio-profile/commit/71babc555064b196bee2ff145880da99e62cbc56))
+
+## [1.4.1](https://github.com/joutio/joutio-profile/compare/v1.4.0...v1.4.1) (2026-09-20)
+
+### Bug Fixes
+
+* **observability:** consume joutio-sdk 1.4.2 (Axon activity metrics fix + Swagger server URL) ([9495a00](https://github.com/joutio/joutio-profile/commit/9495a0090aea2774605dc6226e3975d20dbdfcaf))
+
+## [1.4.0](https://github.com/joutio/joutio-profile/compare/v1.3.0...v1.4.0) (2026-09-20)
+
+### Features
+
+* **observability:** consume joutio-sdk 1.4.0 (Axon activity metrics) ([26ec708](https://github.com/joutio/joutio-profile/commit/26ec7081bb8aed6f54b12a165531f0aadaa60059))
+
+## [1.3.0](https://github.com/joutio/joutio-profile/compare/v1.2.0...v1.3.0) (2026-09-20)
+
+### Features
+
+* **observability:** progression KPIs (XP, levels, badges) + consume joutio-sdk 1.3.0 ([3d4dd13](https://github.com/joutio/joutio-profile/commit/3d4dd1389262b298b7bcf2005399d413fcc0e1bd))
+
+## [1.2.0](https://github.com/joutio/joutio-profile/compare/v1.1.0...v1.2.0) (2026-09-20)
+
+### Features
+
+* **observability:** consume joutio-sdk 1.2.0 (structured logs + tracing) ([1c34d39](https://github.com/joutio/joutio-profile/commit/1c34d390118c645ed1f00b403b6e2ea3033ad22e))
+
+## [1.1.0](https://github.com/joutio/joutio-profile/compare/v1.0.0...v1.1.0) (2026-09-20)
+
+### Features
+
+* **observability:** consume joutio-sdk 1.1.0 (Prometheus metrics) ([771381b](https://github.com/joutio/joutio-profile/commit/771381b27ac9cdbb4833be75c4ada73355ad1877))
+
+## 1.0.0 (2026-09-19)
+
+### Features
+
+* first commit ([7421bdd](https://github.com/joutio/joutio-profile/commit/7421bdde845137d55efbef8386b2cddd81e567f4))
+
+### Bug Fixes
+
+* **maven:** pin inter-service domains to 0.0.1; align parent to joutio-parent 1.0.0 ([cff00de](https://github.com/joutio/joutio-profile/commit/cff00dea5d5ea0a6cfcb794663a1c9ba2fc6f5e7))

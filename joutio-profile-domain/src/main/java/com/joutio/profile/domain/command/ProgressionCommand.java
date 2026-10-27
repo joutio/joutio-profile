@@ -1,0 +1,78 @@
+package com.joutio.profile.domain.command;
+
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
+
+public interface ProgressionCommand {
+
+    /**
+     * Attribue l'XP d'un duel à un joueur. Idempotente : un même {@code gameId}
+     * ne peut être crédité qu'une fois par joueur.
+     *
+     * <p>{@code progressId} est l'identifiant de l'agrégat de progression
+     * (namespacé, cf. {@code ProgressionRules.progressIdFor}), distinct du
+     * {@code userId} qui identifie le {@code ProfileAggregate}.</p>
+     *
+     * <p>{@code draw} distingue l'égalité de la défaite ; {@code botGame} signale un
+     * <b>entraînement</b> : aucune XP n'est attribuée (la progression ne vient que des duels
+     * entre joueurs), les badges restent évalués, et les consommateurs (stats V/N/D,
+     * classement) excluent ces duels.</p>
+     */
+    record AwardXpCommand(
+            @TargetAggregateIdentifier String progressId,
+            String userId,
+            String gameId,
+            String topicId,
+            int gameScore,
+            boolean won,
+            boolean draw,
+            boolean botGame,
+            int correctAnswers,
+            int fastAnswers,
+            /** Bonnes réponses sur les questions illustrées (badge « Œil de lynx »). */
+            int imageCorrectAnswers,
+            /** Adversaire humain du duel, `null` pour un entraînement bot. */
+            String opponentId,
+            /** Elo courant de l'adversaire au moment du duel, `null` si indisponible. */
+            Integer opponentRating,
+            /** Jour local du duel (fuseau d'activité), pour le plafond anti-farm. */
+            java.time.LocalDate ratedDay
+    ) implements ProgressionCommand {
+    }
+
+    /**
+     * Évalue les **badges** d'un joueur à l'issue d'un duel (agrégat dédié
+     * {@code badges:<userId>}). Idempotente : un même {@code gameId} n'est évalué qu'une fois.
+     *
+     * <p>Les faits du duel sont ceux de {@code XpAwardedEvent} ; l'agrégat porte lui-même les
+     * compteurs nécessaires (duels/victoires entre joueurs, séries par thème, XP par thème).</p>
+     */
+    /**
+     * Incrémente un compteur de badge **hors duel** (abonné gagné, défi lancé) puis réévalue les
+     * badges de l'agrégat.
+     */
+    record RecordBadgeCounterCommand(
+            @TargetAggregateIdentifier String badgeId,
+            String userId,
+            com.joutio.profile.domain.model.BadgeMetric metric,
+            String sourceId,
+            java.time.Instant recordedAt
+    ) implements ProgressionCommand {
+    }
+
+    record EvaluateBadgesCommand(
+            @TargetAggregateIdentifier String badgeId,
+            String userId,
+            String gameId,
+            String topicId,
+            int xp,
+            int gameScore,
+            boolean won,
+            boolean botGame,
+            int fastAnswers,
+            /** Bonnes réponses sur les questions illustrées du duel. */
+            int imageCorrectAnswers,
+            /** Jour local du duel (fuseau d'activité), préparé par la saga pour l'assiduité. */
+            java.time.LocalDate activeDay
+    ) implements ProgressionCommand {
+    }
+}

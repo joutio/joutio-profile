@@ -1,0 +1,36 @@
+package com.joutio.profile.domain.query;
+
+import com.joutio.microservice.core.infrastructure.in.api.request.SearchRequest;
+
+import java.util.List;
+
+public interface ProfileQuery {
+
+    record GetProfileQuery(String userId) implements ProfileQuery {
+    }
+
+    record ProfileExistsByIdQuery(String userId) implements ProfileQuery {
+    }
+
+    /**
+     * Résolution en lot : évite le fan-out N+1 côté consommateur (ex. liste de suiveurs).
+     */
+    record GetProfilesByIdsQuery(List<String> userIds) implements ProfileQuery {
+    }
+
+    record ProfileSearchQuery(SearchRequest request) implements ProfileQuery {
+    }
+
+    /**
+     * Suggestions de joueurs par nom (palette ⌘K), ordre alphabétique.
+     */
+    record GetProfileSuggestionsQuery(String nameQuery, int limit) implements ProfileQuery {
+    }
+
+    /**
+     * Comptage, pour chaque URL demandée, des références de bannière de profil.
+     * Réservée aux surfaces d'administration (console média du BFF).
+     */
+    record CountImageReferencesQuery(List<String> imageUrls) implements ProfileQuery {
+    }
+}

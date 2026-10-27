@@ -1,0 +1,74 @@
+package com.joutio.profile.infrastructure.out.persistence.mapper;
+
+import com.joutio.profile.domain.model.PlayerProgress;
+import com.joutio.profile.infrastructure.out.persistence.entity.ProgressEntity;
+
+import java.util.HashMap;
+import java.util.HashSet;
+
+/**
+ * Mapper infrastructure — ProgressEntity (JPA) ⇄ PlayerProgress (domaine).
+ */
+public final class ProgressEntityMapper {
+
+    private ProgressEntityMapper() {
+    }
+
+    public static PlayerProgress toDomain(ProgressEntity entity) {
+        return PlayerProgress.builder()
+                .userId(entity.getUserId())
+                .xpByTopic(new HashMap<>(entity.getXpByTopic()))
+                .gamesByTopic(new HashMap<>(entity.getGamesByTopic()))
+                .badges(new HashSet<>(entity.getBadges()))
+                .gamesPlayed(entity.getGamesPlayed())
+                .wins(entity.getWins())
+                .losses(entity.getLosses())
+                .draws(entity.getDraws())
+                .bestScore(entity.getBestScore())
+                .currentWinStreak(entity.getCurrentWinStreak())
+                .bestWinStreak(entity.getBestWinStreak())
+                .perfectDuels(entity.getPerfectDuels())
+                .fastAnswersTotal(entity.getFastAnswersTotal())
+                .imageCorrectTotal(entity.getImageCorrectTotal())
+                .followersGained(entity.getFollowersGained())
+                .challengesSent(entity.getChallengesSent())
+                .currentDayStreak(entity.getCurrentDayStreak())
+                .bestDayStreak(entity.getBestDayStreak())
+                .lastActiveDate(entity.getLastActiveDate())
+                .updatedAt(entity.getUpdatedAt())
+                .rating(entity.getRating())
+                .peakRating(entity.getPeakRating())
+                .ratedGames(entity.getRatedGames())
+                .provisional(entity.isProvisional())
+                .build();
+    }
+
+    public static ProgressEntity toEntity(PlayerProgress progress) {
+        ProgressEntity entity = new ProgressEntity();
+        entity.setUserId(progress.userId());
+        entity.setXpByTopic(new HashMap<>(progress.xpByTopic()));
+        entity.setGamesByTopic(new HashMap<>(progress.gamesByTopic()));
+        entity.setBadges(new HashSet<>(progress.badges()));
+        entity.setGamesPlayed(progress.gamesPlayed());
+        entity.setWins(progress.wins());
+        entity.setLosses(progress.losses());
+        entity.setDraws(progress.draws());
+        entity.setBestScore(progress.bestScore());
+        entity.setCurrentWinStreak(progress.currentWinStreak());
+        entity.setBestWinStreak(progress.bestWinStreak());
+        entity.setPerfectDuels(progress.perfectDuels());
+        entity.setFastAnswersTotal(progress.fastAnswersTotal());
+        entity.setImageCorrectTotal(progress.imageCorrectTotal());
+        entity.setFollowersGained(progress.followersGained());
+        entity.setChallengesSent(progress.challengesSent());
+        entity.setCurrentDayStreak(progress.currentDayStreak());
+        entity.setBestDayStreak(progress.bestDayStreak());
+        entity.setLastActiveDate(progress.lastActiveDate());
+        entity.setUpdatedAt(progress.updatedAt());
+        entity.setRating(progress.rating());
+        entity.setPeakRating(progress.peakRating());
+        entity.setRatedGames(progress.ratedGames());
+        entity.setProvisional(progress.provisional());
+        return entity;
+    }
+}

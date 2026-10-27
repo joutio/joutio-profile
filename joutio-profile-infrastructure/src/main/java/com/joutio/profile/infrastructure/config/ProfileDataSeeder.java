@@ -1,0 +1,90 @@
+package com.joutio.profile.infrastructure.config;
+
+import com.joutio.microservice.core.domain.constant.JoutioConstants;
+import com.joutio.profile.domain.port.in.CheckProfileUseCase;
+import com.joutio.profile.domain.port.in.CreateProfileUseCase;
+import com.joutio.profile.infrastructure.properties.AppProperties;
+import org.axonframework.modelling.command.AggregateStreamCreationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.CompletionException;
+
+/**
+ * ProfileDataSeeder — garantit l'existence des profils des utilisateurs système (admin, bot).
+ *
+ * <p>Ces utilisateurs sont créés par {@code joutio-identity} au démarrage. Si {@code profile}
+ * n'était pas abonné au flux d'événements à cet instant, la saga {@code CreateProfileSaga} peut
+ * ne jamais les traiter : ce seeder crée alors directement les profils manquants.</p>
+ *
+ * <p>Idempotent : on saute la création si la projection connaît déjà le profil ; sinon la
+ * commande constructeur échoue sur {@link AggregateStreamCreationException} (profil présent dans
+ * l'event store mais projection en retard) et l'erreur est ignorée.</p>
+ */
+@Component
+public class ProfileDataSeeder implements CommandLineRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProfileDataSeeder.class);
+
+    private final CheckProfileUseCase checkProfileUseCase;
+    private final CreateProfileUseCase createProfileUseCase;
+    private final boolean seedDataEnabled;
+
+    public ProfileDataSeeder(CheckProfileUseCase checkProfileUseCase,
+                             CreateProfileUseCase createProfileUseCase,
+                             AppProperties properties) {
+        this.checkProfileUseCase = checkProfileUseCase;
+        this.createProfileUseCase = createProfileUseCase;
+        this.seedDataEnabled = properties.seedData().enabled();
+    }
+
+    @Override
+    public void run(String... args) {
+        if (!seedDataEnabled) {
+            logger.info("Profile data seeding is disabled (app.seed-data.enabled=false)");
+            return;
+        }
+
+        logger.info("=== Starting Profile Data Seeding ===");
+
+        seedProfile(JoutioConstants.SYSTEM_USER_ID, JoutioConstants.SYSTEM_USER_EMAIL,
+                JoutioConstants.SYSTEM_USER_NAME, "System");
+
+        logger.info("=== Profile Data Seeding Completed ===");
+    }
+
+    /**
+     * Crée un profil s'il n'existe pas déjà dans l'event store (la commande constructeur échoue
+     * si l'agrégat existe). Package-private pour les tests.
+     */
+    void seedProfile(String userId, String email, String pseudonym, String label) {
+        if (Boolean.TRUE.equals(checkProfileUseCase.existsById(userId).join())) {
+            logger.info("{} profile already exists, skipping creation", label);
+            return;
+        }
+
+        try {
+            createProfileUseCase.create(userId, email, pseudonym).join();
+            logger.info("✓ {} profile created: {}", label, userId);
+        } catch (CompletionException exception) {
+            if (isAggregateAlreadyExists(exception)) {
+                logger.info("{} profile already exists in the event store, skipping creation", label);
+            } else {
+                logger.error("Failed to seed {} profile", label, exception);
+            }
+        }
+    }
+
+    private boolean isAggregateAlreadyExists(Throwable throwable) {
+        Throwable cause = throwable;
+        while (cause != null) {
+            if (cause instanceof AggregateStreamCreationException) {
+                return true;
+            }
+            cause = cause.getCause();
+        }
+        return false;
+    }
+}

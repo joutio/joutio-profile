@@ -1,0 +1,103 @@
+package com.joutio.profile.domain.event;
+
+import com.joutio.microservice.core.domain.model.i18n.Language;
+
+import java.time.Instant;
+import java.util.List;
+
+/**
+ * Événements du profil : un événement par champ modifié.
+ */
+public interface ProfileEvent {
+
+    String userId();
+
+    /**
+     * Événement émis lors de la création du profil (déclenchée par la saga
+     * suite à un {@code UserRegisteredEvent} du service identity).
+     */
+    record ProfileCreatedEvent(
+            String userId,
+            String email,
+            String pseudonym,
+            Instant createdAt
+    ) implements ProfileEvent {
+    }
+
+    record ProfileOnboardingCompletedEvent(
+            String userId,
+            Instant completedAt
+    ) implements ProfileEvent {
+    }
+
+    record ProfilePseudonymUpdatedEvent(
+            String userId,
+            String requestedBy,
+            String pseudonym,
+            Instant updatedAt
+    ) implements ProfileEvent {
+    }
+
+    record ProfileBioUpdatedEvent(
+            String userId,
+            String requestedBy,
+            String bio,
+            Instant updatedAt
+    ) implements ProfileEvent {
+    }
+
+    record ProfileCountryUpdatedEvent(
+            String userId,
+            String requestedBy,
+            String country,
+            Instant updatedAt
+    ) implements ProfileEvent {
+    }
+
+    record ProfileAvatarUpdatedEvent(
+            String userId,
+            String requestedBy,
+            String avatarOptions,
+            Instant updatedAt
+    ) implements ProfileEvent {
+    }
+
+    record ProfileBannerUpdatedEvent(
+            String userId,
+            String requestedBy,
+            String bannerUrl,
+            Instant updatedAt
+    ) implements ProfileEvent {
+    }
+
+    record ProfileLanguageUpdatedEvent(
+            String userId,
+            String requestedBy,
+            Language language,
+            Instant updatedAt
+    ) implements ProfileEvent {
+    }
+
+    /**
+     * Centres d'intérêt mis à jour : codes ordonnés (premier = univers principal), max 3.
+     * Une liste vide efface les intérêts.
+     */
+    record ProfileInterestsUpdatedEvent(
+            String userId,
+            String requestedBy,
+            List<String> interests,
+            Instant updatedAt
+    ) implements ProfileEvent {
+    }
+
+    /**
+     * Titre thématique porté mis à jour ({@code titleKey} {@code null} = aucun titre affiché).
+     */
+    record ProfileEquippedTitleUpdatedEvent(
+            String userId,
+            String requestedBy,
+            String titleKey,
+            Instant updatedAt
+    ) implements ProfileEvent {
+    }
+}

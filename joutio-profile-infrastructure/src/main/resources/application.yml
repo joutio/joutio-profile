@@ -1,0 +1,31 @@
+spring:
+  config:
+    import: optional:classpath:joutio-defaults.yml
+  application:
+    name: joutio-profile
+  profiles:
+    default: local
+
+  flyway:
+    locations: classpath:db/migration/profile
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+microservice:
+  swagger:
+    description: Joutio Profile Module - User profile management (display name, bio, country)
+  websocket:
+    # La présence est pilotée par les sessions STOMP du BFF (seule surface temps réel).
+    enabled: false
+
+app:
+  seed-data:
+    enabled: true
+  activity:
+    # Fuseau servant à découper les « jours » du graphe d'activité (streak journalière)
+    zone: Europe/Paris
+
+

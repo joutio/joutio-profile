@@ -1,0 +1,71 @@
+package com.joutio.profile.domain.port.out;
+
+import com.joutio.microservice.core.infrastructure.in.api.response.SearchResponse;
+import com.joutio.microservice.core.infrastructure.in.api.request.SearchRequest;
+import com.joutio.profile.domain.model.ImageReferenceCount;
+import com.joutio.profile.domain.model.Profile;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Port sortant - Lecture/écriture des profils depuis la persistance.
+ */
+public interface ProfileRepositoryPort {
+
+    /**
+     * Persiste un profil (création ou mise à jour).
+     *
+     * @param profile le modèle domaine à persister
+     */
+    void save(Profile profile);
+
+    /**
+     * Trouve un profil par son identifiant utilisateur.
+     *
+     * @param userId l'identifiant de l'utilisateur
+     * @return le profil trouvé, ou Optional.empty() s'il n'existe pas
+     */
+    Optional<Profile> findById(String userId);
+
+    /**
+     * Trouve plusieurs profils par leurs identifiants (résolution en lot).
+     *
+     * @param userIds les identifiants recherchés
+     * @return les profils existants (ordre non garanti)
+     */
+    List<Profile> findByIds(List<String> userIds);
+
+    /**
+     * Recherche paginée de profils selon des critères.
+     *
+     * @param searchCriteria les critères de recherche
+     * @return la page de profils correspondante
+     */
+    SearchResponse<Profile> findAll(SearchRequest request);
+
+    /**
+     * Vérifie si un profil existe pour cet utilisateur.
+     *
+     * @param userId l'identifiant de l'utilisateur à vérifier
+     * @return true si un profil existe
+     */
+    boolean existsById(String userId);
+
+    /**
+     * Suggestions de profils par nom (insensible à la casse), ordre alphabétique.
+     *
+     * @param nameQuery texte recherché (non vide)
+     * @param limit     nombre maximum de suggestions
+     */
+    List<Profile> findSuggestions(String nameQuery, int limit);
+
+    /**
+     * Compte, pour chaque URL demandée, le nombre de bannières de profil qui la référencent.
+     * Les URLs absentes du read model ne sont pas retournées.
+     *
+     * @param imageUrls URLs recherchées (liste vide = aucun résultat)
+     * @return un compteur par URL trouvée
+     */
+    List<ImageReferenceCount> countReferencesByBannerUrls(List<String> imageUrls);
+}

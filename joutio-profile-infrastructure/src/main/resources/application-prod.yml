@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  config:
+    import: optional:classpath:joutio-prod.yml
+    activate:
+      on-profile: prod
+
+app:
+  seed-data:
+    enabled: ${JOUTIO_SEED_DATA_ENABLED:true}
