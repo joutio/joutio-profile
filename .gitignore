@@ -92,3 +92,4 @@ docker-compose.override.yml
 # Generated files
 generated/
 nul
+# Joutio release 1.0.0
