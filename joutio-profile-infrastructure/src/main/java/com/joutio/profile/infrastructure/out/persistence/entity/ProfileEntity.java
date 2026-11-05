@@ -75,4 +75,8 @@ public class ProfileEntity {
      */
     @Column(name = "interests", length = 255)
     private String interests;
+
+    /** Entraînement automatique contre le bot quand une recherche expire sans adversaire. */
+    @Column(name = "auto_train_on_timeout", nullable = false)
+    private boolean autoTrainOnTimeout = true;
 }

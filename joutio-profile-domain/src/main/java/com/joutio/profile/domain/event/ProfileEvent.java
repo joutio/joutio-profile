@@ -78,6 +78,15 @@ public interface ProfileEvent {
     ) implements ProfileEvent {
     }
 
+    /** Préférence « entraînement si aucun adversaire » mise à jour. */
+    record ProfileAutoTrainOnTimeoutUpdatedEvent(
+            String userId,
+            String requestedBy,
+            boolean autoTrainOnTimeout,
+            Instant updatedAt
+    ) implements ProfileEvent {
+    }
+
     /**
      * Centres d'intérêt mis à jour : codes ordonnés (premier = univers principal), max 3.
      * Une liste vide efface les intérêts.

@@ -39,6 +39,8 @@ public class ProfileAggregate {
     private String bannerUrl;
     private String equippedTitle;
     private Language language;
+    /** Absent des anciens flux d'événements : vaut le défaut ({@code true}). */
+    private boolean autoTrainOnTimeout = ProfileRules.DEFAULT_AUTO_TRAIN_ON_TIMEOUT;
     private Instant onboardingCompletedAt;
     /** Codes {@code TopicCategory} ordonnés (premier = univers principal), max 3. */
     private List<String> interests = List.of();
@@ -190,6 +192,23 @@ public class ProfileAggregate {
         );
     }
 
+    @CommandHandler
+    public void handle(ProfileCommand.UpdateAutoTrainOnTimeoutCommand command) {
+        requireOwner(command.requestedBy());
+        if (command.autoTrainOnTimeout() == this.autoTrainOnTimeout) {
+            return;
+        }
+
+        AggregateLifecycle.apply(
+                new ProfileEvent.ProfileAutoTrainOnTimeoutUpdatedEvent(
+                        command.userId(),
+                        command.requestedBy(),
+                        command.autoTrainOnTimeout(),
+                        Instant.now()
+                )
+        );
+    }
+
     /**
      * Centres d'intérêt : codes ordonnés (premier = univers principal). Le domaine valide la
      * forme et la cardinalité ; l'appartenance à l'enum thème est vérifiée par le BFF.
@@ -276,6 +295,11 @@ public class ProfileAggregate {
     @EventSourcingHandler
     public void on(ProfileEvent.ProfileLanguageUpdatedEvent event) {
         this.language = event.language();
+    }
+
+    @EventSourcingHandler
+    public void on(ProfileEvent.ProfileAutoTrainOnTimeoutUpdatedEvent event) {
+        this.autoTrainOnTimeout = event.autoTrainOnTimeout();
     }
 
     @EventSourcingHandler

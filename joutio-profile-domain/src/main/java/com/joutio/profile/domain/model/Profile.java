@@ -31,11 +31,27 @@ public record Profile(
          * Centres d'intérêt du joueur : codes {@code TopicCategory} ordonnés (le premier est
          * l'univers principal), au maximum {@link ProfileRules#MAX_INTERESTS}. Jamais {@code null}.
          */
-        List<String> interests
+        List<String> interests,
+        /**
+         * À l'expiration d'une recherche sans adversaire : entraînement automatique contre le bot.
+         * Jamais {@code null} ({@link ProfileRules#DEFAULT_AUTO_TRAIN_ON_TIMEOUT} si absent, par
+         * exemple dans une réponse sérialisée avant l'ajout du champ).
+         */
+        Boolean autoTrainOnTimeout
 ) {
 
     public Profile {
         interests = interests == null ? List.of() : List.copyOf(interests);
+        autoTrainOnTimeout = autoTrainOnTimeout == null ? ProfileRules.DEFAULT_AUTO_TRAIN_ON_TIMEOUT : autoTrainOnTimeout;
+    }
+
+    /** Constructeur de compatibilité pour les anciens snapshots/tests sans préférence de jeu. */
+    public Profile(String userId, String email, String pseudonym, String bio, String country,
+                   String avatarOptions, String bannerUrl, String equippedTitle, Language language,
+                   Instant createdAt, Instant updatedAt, Instant onboardingCompletedAt,
+                   List<String> interests) {
+        this(userId, email, pseudonym, bio, country, avatarOptions, bannerUrl, equippedTitle,
+                language, createdAt, updatedAt, onboardingCompletedAt, interests, null);
     }
 
     /**
@@ -46,7 +62,7 @@ public record Profile(
                    String avatarOptions, String bannerUrl, String equippedTitle, Language language,
                    Instant createdAt, Instant updatedAt, Instant onboardingCompletedAt) {
         this(userId, email, pseudonym, bio, country, avatarOptions, bannerUrl, equippedTitle,
-                language, createdAt, updatedAt, onboardingCompletedAt, List.of());
+                language, createdAt, updatedAt, onboardingCompletedAt, List.of(), null);
     }
 
     /** Constructeur de compatibilité pour les anciens snapshots/tests sans flag onboarding. */
@@ -54,6 +70,6 @@ public record Profile(
                    String avatarOptions, String bannerUrl, String equippedTitle, Language language,
                    Instant createdAt, Instant updatedAt) {
         this(userId, email, pseudonym, bio, country, avatarOptions, bannerUrl, equippedTitle,
-                language, createdAt, updatedAt, null, List.of());
+                language, createdAt, updatedAt, null, List.of(), null);
     }
 }

@@ -40,6 +40,9 @@ public final class ProfileRules {
     /** Langue par défaut d'un profil (appliquée à la création). */
     public static final Language DEFAULT_LANGUAGE = Language.FR;
 
+    /** Préférence de jeu par défaut : entraînement automatique si aucun adversaire n'est trouvé. */
+    public static final boolean DEFAULT_AUTO_TRAIN_ON_TIMEOUT = true;
+
     private ProfileRules() {
     }
 }

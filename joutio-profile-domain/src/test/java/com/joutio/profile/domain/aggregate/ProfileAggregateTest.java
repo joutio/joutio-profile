@@ -236,6 +236,43 @@ class ProfileAggregateTest {
     }
 
     @Test
+    void autoTrainOnTimeoutIsOnByDefault_soEnablingItEmitsNoEvent() {
+        fixture
+                .given(createdProfile())
+                .when(new ProfileCommand.UpdateAutoTrainOnTimeoutCommand("user-1", "user-1", true))
+                .expectNoEvents();
+    }
+
+    @Test
+    void disableAutoTrainOnTimeout_appliesUpdatedEvent() {
+        fixture
+                .given(createdProfile())
+                .when(new ProfileCommand.UpdateAutoTrainOnTimeoutCommand("user-1", "user-1", false))
+                .expectEventsMatching(JoutioAxonMatchers.singlePayloadMatching(
+                        ProfileEvent.ProfileAutoTrainOnTimeoutUpdatedEvent.class,
+                        e -> !((ProfileEvent.ProfileAutoTrainOnTimeoutUpdatedEvent) e).autoTrainOnTimeout()));
+    }
+
+    @Test
+    void reEnableAutoTrainOnTimeout_appliesUpdatedEvent() {
+        fixture
+                .given(createdProfile(),
+                        new ProfileEvent.ProfileAutoTrainOnTimeoutUpdatedEvent("user-1", "user-1", false, NOW))
+                .when(new ProfileCommand.UpdateAutoTrainOnTimeoutCommand("user-1", "user-1", true))
+                .expectEventsMatching(JoutioAxonMatchers.singlePayloadMatching(
+                        ProfileEvent.ProfileAutoTrainOnTimeoutUpdatedEvent.class,
+                        e -> ((ProfileEvent.ProfileAutoTrainOnTimeoutUpdatedEvent) e).autoTrainOnTimeout()));
+    }
+
+    @Test
+    void updateAutoTrainOnTimeoutByAnotherPlayer_throwsNotOwnerProblem() {
+        fixture
+                .given(createdProfile())
+                .when(new ProfileCommand.UpdateAutoTrainOnTimeoutCommand("user-1", "intruder", false))
+                .expectException(ProfileProblems.ProfileNotOwnerProblem.class);
+    }
+
+    @Test
     void updateEquippedTitle_appliesEquippedTitleUpdatedEvent() {
         fixture
                 .given(createdProfile())

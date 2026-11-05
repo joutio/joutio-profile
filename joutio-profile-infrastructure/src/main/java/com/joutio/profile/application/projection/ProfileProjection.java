@@ -105,6 +105,13 @@ public class ProfileProjection {
 
     @EventHandler
     @Transactional
+    public void on(ProfileEvent.ProfileAutoTrainOnTimeoutUpdatedEvent event) {
+        update(event.userId(), event.updatedAt(),
+                profile -> profile.toBuilder().autoTrainOnTimeout(event.autoTrainOnTimeout()).build());
+    }
+
+    @EventHandler
+    @Transactional
     public void on(ProfileEvent.ProfileInterestsUpdatedEvent event) {
         update(event.userId(), event.updatedAt(),
                 profile -> profile.toBuilder().interests(event.interests()).build());

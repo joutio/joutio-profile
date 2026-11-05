@@ -32,6 +32,7 @@ public final class ProfileEntityMapper {
                 .updatedAt(entity.getUpdatedAt())
                 .onboardingCompletedAt(entity.getOnboardingCompletedAt())
                 .interests(parseInterests(entity.getInterests()))
+                .autoTrainOnTimeout(entity.isAutoTrainOnTimeout())
                 .build();
     }
 
@@ -55,6 +56,9 @@ public final class ProfileEntityMapper {
         entity.setUpdatedAt(profile.updatedAt());
         entity.setOnboardingCompletedAt(profile.onboardingCompletedAt());
         entity.setInterests(serializeInterests(profile.interests()));
+        entity.setAutoTrainOnTimeout(profile.autoTrainOnTimeout() == null
+                ? ProfileRules.DEFAULT_AUTO_TRAIN_ON_TIMEOUT
+                : profile.autoTrainOnTimeout());
         return entity;
     }
 

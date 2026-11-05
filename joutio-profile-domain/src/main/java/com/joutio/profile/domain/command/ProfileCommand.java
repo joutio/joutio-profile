@@ -74,6 +74,17 @@ public interface ProfileCommand {
     }
 
     /**
+     * Préférence de jeu : à l'expiration d'une recherche d'adversaire sans résultat, lancer
+     * automatiquement un entraînement contre le bot ({@code true}, défaut) ou proposer les choix.
+     */
+    record UpdateAutoTrainOnTimeoutCommand(
+            @TargetAggregateIdentifier String userId,
+            String requestedBy,
+            boolean autoTrainOnTimeout
+    ) implements ProfileCommand {
+    }
+
+    /**
      * Centres d'intérêt du joueur : codes {@code TopicCategory} ordonnés (premier = univers
      * principal), max 3. Une liste vide efface les intérêts.
      */

@@ -10,7 +10,8 @@
 ## 1. Rôle
 
 Propriétaire des **données modifiables** du profil utilisateur (`pseudonym`, `bio`, `country`,
-`avatarOptions`, `bannerUrl`, `language`).
+`avatarOptions`, `bannerUrl`, `language`) et des **préférences de jeu** (`autoTrainOnTimeout` :
+entraînement automatique contre le bot quand une recherche d'adversaire expire, `true` par défaut).
 Identity (`joutio-identity`) reste le IdP : identité immuable + JWT (lecture du profil côté
 frontend = claims du JWT). Ce service est **créé par événement** (saga sur
 `UserRegisteredEvent` d'identity) et mis à jour **uniquement par le propriétaire**, **champ par
