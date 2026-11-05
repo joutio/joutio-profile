@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/joutio/joutio-profile/compare/v1.0.0...v1.1.0) (2026-11-05)
+
+### Features
+
+* auto-train-on-timeout game preference ([ff3ff5c](https://github.com/joutio/joutio-profile/commit/ff3ff5ce0717343fbea23d25f0b17fa176305329))
+
 ## 1.0.0 (2026-10-27)
 
 ### Features
