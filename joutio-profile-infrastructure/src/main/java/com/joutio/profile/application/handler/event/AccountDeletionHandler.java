@@ -43,6 +43,7 @@ public class AccountDeletionHandler {
         jdbcTemplate.update("DELETE FROM presence_session WHERE user_id = ?", userId);
         jdbcTemplate.update("DELETE FROM presence_entry WHERE user_id = ?", userId);
         jdbcTemplate.update("DELETE FROM profile_entry WHERE user_id = ?", userId);
+        jdbcTemplate.update("DELETE FROM pseudonym_claim WHERE user_id = ?", userId);
         eventStoreErasureService.eraseAggregates(List.of(
                 userId,
                 "progress:" + userId,

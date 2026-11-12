@@ -2,6 +2,7 @@ package com.joutio.profile.domain.model;
 
 import com.joutio.microservice.core.domain.model.i18n.Language;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -9,7 +10,26 @@ import java.util.regex.Pattern;
  */
 public final class ProfileRules {
 
+    /** Longueur maximale historique (pseudonymes antérieurs au 2026-11-12, conservés tels quels). */
     public static final int MAX_PSEUDONYM_LENGTH = 100;
+
+    public static final int MIN_PSEUDONYM_CHARS = 3;
+    public static final int MAX_PSEUDONYM_CHARS = 20;
+
+    /**
+     * Pseudonyme choisi par un joueur (2026-11-12) : lettres ASCII, chiffres et tiret bas, 3 à 20
+     * caractères, commençant par une lettre. Unique sans tenir compte de la casse.
+     */
+    public static final Pattern PSEUDONYM_PATTERN = Pattern.compile("^[A-Za-z][A-Za-z0-9_]{2,19}$");
+
+    public static boolean isValidPseudonym(String pseudonym) {
+        return pseudonym != null && PSEUDONYM_PATTERN.matcher(pseudonym).matches();
+    }
+
+    /** Clé d'unicité : insensible à la casse et aux espaces en bord. */
+    public static String pseudonymKey(String pseudonym) {
+        return pseudonym == null ? null : pseudonym.trim().toLowerCase(Locale.ROOT);
+    }
 
     public static final int MAX_BIO_LENGTH = 300;
 

@@ -5,10 +5,17 @@ import com.joutio.microservice.core.domain.model.i18n.Language;
 import com.joutio.profile.domain.command.ProfileCommand;
 import com.joutio.profile.domain.event.ProfileEvent;
 import com.joutio.profile.domain.exception.ProfileProblems;
+import com.joutio.profile.domain.port.out.PseudonymClaimPort;
+import org.junit.jupiter.api.BeforeEach;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Test Axon in-memory de l'agrégat {@link ProfileAggregate} via {@link AggregateTestFixture}.
@@ -21,6 +28,95 @@ class ProfileAggregateTest {
 
     private final AggregateTestFixture<ProfileAggregate> fixture =
             new AggregateTestFixture<>(ProfileAggregate.class);
+    private final InMemoryClaims claims = new InMemoryClaims();
+
+    @BeforeEach
+    void registerClaims() {
+        fixture.registerInjectableResource(claims);
+    }
+
+    /** Réservations en mémoire : clé normalisée → joueur. */
+    static final class InMemoryClaims implements PseudonymClaimPort {
+        final Map<String, String> owners = new HashMap<>();
+
+        @Override
+        public boolean claim(String key, String userId) {
+            return userId.equals(owners.computeIfAbsent(key, _ -> userId));
+        }
+
+        @Override
+        public void release(String key, String userId) {
+            owners.remove(key, userId);
+        }
+
+        @Override
+        public boolean available(String key, String userId) {
+            String owner = owners.get(key);
+            return owner == null || owner.equals(userId);
+        }
+    }
+
+    @Test
+    void updatePseudonym_takenByAnotherPlayer_isRejected() {
+        claims.owners.put("bravo", "user-2");
+        fixture.given(createdProfile())
+                .when(new ProfileCommand.UpdateProfilePseudonymCommand("user-1", "user-1", "BRAVO"))
+                .expectException(ProfileProblems.PseudonymTakenProblem.class);
+    }
+
+    @Test
+    void updatePseudonym_invalidCharacters_isRejected() {
+        fixture.given(createdProfile())
+                .when(new ProfileCommand.UpdateProfilePseudonymCommand("user-1", "user-1", "Él ève"))
+                .expectException(ProfileProblems.PseudonymInvalidProblem.class);
+    }
+
+    @Test
+    void updatePseudonym_tooShortOrStartingWithDigit_isRejected() {
+        fixture.given(createdProfile())
+                .when(new ProfileCommand.UpdateProfilePseudonymCommand("user-1", "user-1", "Ab"))
+                .expectException(ProfileProblems.PseudonymInvalidProblem.class);
+        fixture.given(createdProfile())
+                .when(new ProfileCommand.UpdateProfilePseudonymCommand("user-1", "user-1", "1Alpha"))
+                .expectException(ProfileProblems.PseudonymInvalidProblem.class);
+    }
+
+    @Test
+    void updatePseudonym_releasesPreviousKeyAndClaimsNewOne() {
+        claims.owners.put("alice", "user-1");
+        fixture.given(createdProfile())
+                .when(new ProfileCommand.UpdateProfilePseudonymCommand("user-1", "user-1", "Alicia_2"))
+                .expectEventsMatching(JoutioAxonMatchers.singlePayloadMatching(
+                        ProfileEvent.ProfilePseudonymUpdatedEvent.class,
+                        e -> "Alicia_2".equals(((ProfileEvent.ProfilePseudonymUpdatedEvent) e).pseudonym())));
+        assertEquals("user-1", claims.owners.get("alicia_2"));
+        assertFalse(claims.owners.containsKey("alice"));
+    }
+
+    @Test
+    void updatePseudonym_caseChangeOfOwnPseudonym_isAllowed() {
+        claims.owners.put("alice", "user-1");
+        fixture.given(createdProfile())
+                .when(new ProfileCommand.UpdateProfilePseudonymCommand("user-1", "user-1", "ALICE"))
+                .expectEventsMatching(JoutioAxonMatchers.singlePayloadMatching(
+                        ProfileEvent.ProfilePseudonymUpdatedEvent.class,
+                        e -> "ALICE".equals(((ProfileEvent.ProfilePseudonymUpdatedEvent) e).pseudonym())));
+        assertEquals("user-1", claims.owners.get("alice"));
+    }
+
+    @Test
+    void create_withTakenPseudonym_drawsAnotherUniqueOne() {
+        claims.owners.put("swiftfox42", "user-2");
+        fixture.givenNoPriorActivity()
+                .when(new ProfileCommand.CreateProfileCommand("user-1", "user@joutio.dev", "SwiftFox42"))
+                .expectEventsMatching(JoutioAxonMatchers.singlePayloadMatching(
+                        ProfileEvent.ProfileCreatedEvent.class,
+                        e -> {
+                            String pseudonym = ((ProfileEvent.ProfileCreatedEvent) e).pseudonym();
+                            return !"SwiftFox42".equals(pseudonym)
+                                    && "user-1".equals(claims.owners.get(pseudonym.toLowerCase()));
+                        }));
+    }
 
     @Test
     void create_appliesProfileCreatedEvent() {
@@ -94,7 +190,7 @@ class ProfileAggregateTest {
         fixture
                 .given(createdProfile())
                 .when(new ProfileCommand.UpdateProfilePseudonymCommand("user-1", "user-1", ""))
-                .expectException(ProfileProblems.PseudonymBlankProblem.class);
+                .expectException(ProfileProblems.PseudonymInvalidProblem.class);
     }
 
     @Test

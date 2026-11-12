@@ -1,5 +1,8 @@
 package com.joutio.profile.application.handler.query;
 
+import com.joutio.profile.domain.model.ProfileRules;
+import com.joutio.profile.domain.model.PseudonymAvailability;
+import com.joutio.profile.domain.port.out.PseudonymClaimPort;
 import com.joutio.microservice.core.infrastructure.in.api.response.SearchResponse;
 import com.joutio.profile.domain.exception.ProfileProblems;
 import com.joutio.profile.domain.model.ImageReferenceCount;
@@ -20,9 +23,22 @@ import java.util.List;
 public class ProfileQueryHandler {
 
     private final ProfileRepositoryPort profileRepositoryPort;
+    private final PseudonymClaimPort pseudonymClaimPort;
 
-    public ProfileQueryHandler(ProfileRepositoryPort profileRepositoryPort) {
+    public ProfileQueryHandler(ProfileRepositoryPort profileRepositoryPort,
+                               PseudonymClaimPort pseudonymClaimPort) {
         this.profileRepositoryPort = profileRepositoryPort;
+        this.pseudonymClaimPort = pseudonymClaimPort;
+    }
+
+    @QueryHandler
+    public PseudonymAvailability handle(ProfileQuery.CheckPseudonymAvailabilityQuery query) {
+        String pseudonym = query.pseudonym();
+        if (!ProfileRules.isValidPseudonym(pseudonym)) {
+            return new PseudonymAvailability(pseudonym, false, false);
+        }
+        return new PseudonymAvailability(pseudonym, true,
+                pseudonymClaimPort.available(ProfileRules.pseudonymKey(pseudonym), query.userId()));
     }
 
     @QueryHandler

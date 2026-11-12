@@ -37,6 +37,28 @@ public interface ProfileProblems {
         }
     }
 
+    class PseudonymInvalidProblem extends ProfileProblem {
+        public PseudonymInvalidProblem(String userId, String pseudonym) {
+            super(userId, "urn:joutio:profile:pseudonymInvalid",
+                    ProblemCategory.VALIDATION,
+                    "Invalid pseudonym",
+                    "The pseudonym must be " + ProfileRules.MIN_PSEUDONYM_CHARS + " to "
+                            + ProfileRules.MAX_PSEUDONYM_CHARS
+                            + " characters: letters, digits or underscore, starting with a letter",
+                    Map.of("pseudonym", pseudonym == null ? "" : pseudonym));
+        }
+    }
+
+    class PseudonymTakenProblem extends ProfileProblem {
+        public PseudonymTakenProblem(String userId, String pseudonym) {
+            super(userId, "urn:joutio:profile:pseudonymTaken",
+                    ProblemCategory.BUSINESS_INVALID_COMMAND,
+                    "Pseudonym already taken",
+                    "This pseudonym is already used by another player",
+                    Map.of("pseudonym", pseudonym));
+        }
+    }
+
     class PseudonymTooLongProblem extends ProfileProblem {
         public PseudonymTooLongProblem(String userId, String pseudonym) {
             super(userId, "urn:joutio:profile:pseudonymTooLong",

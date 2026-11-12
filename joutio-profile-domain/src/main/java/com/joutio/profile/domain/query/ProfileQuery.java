@@ -33,4 +33,8 @@ public interface ProfileQuery {
      */
     record CountImageReferencesQuery(List<String> imageUrls) implements ProfileQuery {
     }
+
+    /** Disponibilité d'un pseudonyme en saisie ; {@code userId} = joueur qui vérifie (son pseudo est « disponible »). */
+    record CheckPseudonymAvailabilityQuery(String pseudonym, String userId) implements ProfileQuery {
+    }
 }

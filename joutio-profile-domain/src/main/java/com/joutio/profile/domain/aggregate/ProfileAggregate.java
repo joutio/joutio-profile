@@ -6,6 +6,8 @@ import com.joutio.profile.domain.event.ProfileEvent;
 import com.joutio.profile.domain.exception.ProfileProblems;
 import com.joutio.profile.domain.model.PlayerTitle;
 import com.joutio.profile.domain.model.ProfileRules;
+import com.joutio.profile.domain.model.PseudonymGenerator;
+import com.joutio.profile.domain.port.out.PseudonymClaimPort;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateCreationPolicy;
@@ -56,21 +58,49 @@ public class ProfileAggregate {
      */
     @CommandHandler
     @CreationPolicy(AggregateCreationPolicy.CREATE_IF_MISSING)
-    public void handle(ProfileCommand.CreateProfileCommand command) {
+    public void handle(ProfileCommand.CreateProfileCommand command, PseudonymClaimPort claims) {
         if (pseudonym != null) {
             return;
         }
         validatePseudonym(command.userId(), command.initialPseudonym());
+        String granted = claimInitialPseudonym(command.userId(), command.initialPseudonym(), claims);
 
         AggregateLifecycle.apply(
                 new ProfileEvent.ProfileCreatedEvent(
                         command.userId(),
                         command.email(),
-                        command.initialPseudonym(),
+                        granted,
                         Instant.now()
                 )
         );
     }
+
+    /**
+     * Pseudonyme initial unique : celui proposé s'il est libre, sinon d'autres tirages du
+     * générateur, puis un suffixe dérivé de l'identifiant (le résultat est figé dans l'événement,
+     * donc rejouable).
+     */
+    private static String claimInitialPseudonym(String userId, String proposed, PseudonymClaimPort claims) {
+        if (claims.claim(ProfileRules.pseudonymKey(proposed), userId)) {
+            return proposed;
+        }
+        for (int attempt = 0; attempt < INITIAL_PSEUDONYM_ATTEMPTS; attempt++) {
+            String candidate = PseudonymGenerator.generate();
+            if (claims.claim(ProfileRules.pseudonymKey(candidate), userId)) {
+                return candidate;
+            }
+        }
+        String suffix = Integer.toUnsignedString(userId.hashCode(), 36);
+        String fallback = ("Player_" + suffix);
+        fallback = fallback.length() > ProfileRules.MAX_PSEUDONYM_CHARS
+                ? fallback.substring(0, ProfileRules.MAX_PSEUDONYM_CHARS) : fallback;
+        if (!claims.claim(ProfileRules.pseudonymKey(fallback), userId)) {
+            throw new ProfileProblems.PseudonymTakenProblem(userId, fallback);
+        }
+        return fallback;
+    }
+
+    private static final int INITIAL_PSEUDONYM_ATTEMPTS = 10;
 
     @CommandHandler
     public void handle(ProfileCommand.CompleteOnboardingCommand command) {
@@ -83,11 +113,21 @@ public class ProfileAggregate {
     }
 
     @CommandHandler
-    public void handle(ProfileCommand.UpdateProfilePseudonymCommand command) {
+    public void handle(ProfileCommand.UpdateProfilePseudonymCommand command, PseudonymClaimPort claims) {
         requireOwner(command.requestedBy());
-        validatePseudonym(command.userId(), command.pseudonym());
         if (Objects.equals(command.pseudonym(), this.pseudonym)) {
             return;
+        }
+        if (!ProfileRules.isValidPseudonym(command.pseudonym())) {
+            throw new ProfileProblems.PseudonymInvalidProblem(command.userId(), command.pseudonym());
+        }
+        String newKey = ProfileRules.pseudonymKey(command.pseudonym());
+        if (!claims.claim(newKey, userId)) {
+            throw new ProfileProblems.PseudonymTakenProblem(command.userId(), command.pseudonym());
+        }
+        String oldKey = ProfileRules.pseudonymKey(this.pseudonym);
+        if (oldKey != null && !oldKey.equals(newKey)) {
+            claims.release(oldKey, userId);
         }
 
         AggregateLifecycle.apply(
