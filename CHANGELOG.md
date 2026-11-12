@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/joutio/joutio-profile/compare/v1.1.0...v1.2.0) (2026-11-12)
+
+### Features
+
+* **profile:** unique pseudonyms with stricter characters ([83a114d](https://github.com/joutio/joutio-profile/commit/83a114d3091e2f0de5024ab48de30f401ab04840))
+
 ## [1.1.0](https://github.com/joutio/joutio-profile/compare/v1.0.0...v1.1.0) (2026-11-05)
 
 ### Features
