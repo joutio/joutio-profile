@@ -44,5 +44,8 @@ public enum BadgeFamily {
     EXPLORATION,
 
     /** Collection : nombre de badges obtenus. */
-    COLLECTION
+    COLLECTION,
+
+    /** Recruteur : amis parrainés qui ont terminé leur premier duel (1, 3, 5, 10, 25, 50, 100). */
+    RECRUITER
 }

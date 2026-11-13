@@ -212,6 +212,27 @@ class BadgeAggregateTest {
     }
 
     @Test
+    void firstQualifiedReferral_earnsRecruiter() {
+        fixture.givenNoPriorActivity()
+                .when(new ProgressionCommand.RecordBadgeCounterCommand(
+                        BADGE_ID, "user-1", BadgeMetric.REFERRALS_QUALIFIED, "friend-1", Instant.now()))
+                .expectEventsMatching(earned(Badge.RECRUITER_FER));
+    }
+
+    @Test
+    void thirdQualifiedReferral_earnsRecruiterBronze() {
+        ProgressionEvent.BadgeCounterRecordedEvent[] previous = new ProgressionEvent.BadgeCounterRecordedEvent[2];
+        for (int index = 0; index < previous.length; index++) {
+            previous[index] = new ProgressionEvent.BadgeCounterRecordedEvent(
+                    BADGE_ID, "user-1", BadgeMetric.REFERRALS_QUALIFIED, "friend-" + index, Instant.now());
+        }
+        fixture.given((Object[]) previous)
+                .when(new ProgressionCommand.RecordBadgeCounterCommand(
+                        BADGE_ID, "user-1", BadgeMetric.REFERRALS_QUALIFIED, "friend-3", Instant.now()))
+                .expectEventsMatching(earned(Badge.RECRUITER_BRONZE));
+    }
+
+    @Test
     void eighthTopic_earnsExplorerBronze() {
         fixture.given((Object[]) distinctTopics(Badge.EXPLORER_BRONZE.target() - 1))
                 .when(duel("game-8", "topic-8", 30, 30, false, false, 0))

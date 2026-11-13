@@ -70,6 +70,9 @@ public class ProgressEntity {
     @Column(name = "challenges_sent", nullable = false)
     private int challengesSent;
 
+    @Column(name = "referrals_qualified", nullable = false)
+    private int referralsQualified;
+
     /** Série courante de jours joués — badge Assiduité (même règle que la projection d'activité). */
     @Column(name = "current_day_streak", nullable = false)
     private int currentDayStreak;

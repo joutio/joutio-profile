@@ -43,7 +43,9 @@ public record PlayerProgress(
         /** Nombre de duels classés (hors bot, hors plafond anti-farm). */
         int ratedGames,
         /** Elo encore provisoire (moins de {@link EloRules#PROVISIONAL_GAMES} duels classés). */
-        boolean provisional
+        boolean provisional,
+        /** Filleuls qualifiés (premier duel terminé) — badge Recruteur. */
+        int referralsQualified
 ) {
 
     public PlayerProgress {
@@ -56,6 +58,7 @@ public record PlayerProgress(
         rating = Math.max(0, rating);
         peakRating = Math.max(peakRating, rating);
         ratedGames = Math.max(0, ratedGames);
+        referralsQualified = Math.max(0, referralsQualified);
         provisional = EloRules.isProvisional(ratedGames);
     }
 

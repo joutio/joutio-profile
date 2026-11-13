@@ -163,6 +163,21 @@ public enum Badge {
     CHALLENGES_DIAMANT("Meneur de jeu", BadgeFamily.CHALLENGES, BadgeTier.DIAMANT,
             BadgeMetric.CHALLENGES_SENT, 500),
 
+    // ── Recruteur : amis parrainés qui ont terminé leur premier duel (partage.md § 6) ─────────
+    RECRUITER_FER("Recruteur", BadgeFamily.RECRUITER, BadgeTier.FER, BadgeMetric.REFERRALS_QUALIFIED, 1),
+    RECRUITER_BRONZE("Rabatteur", BadgeFamily.RECRUITER, BadgeTier.BRONZE,
+            BadgeMetric.REFERRALS_QUALIFIED, 3),
+    RECRUITER_ARGENT("Ambassadeur", BadgeFamily.RECRUITER, BadgeTier.ARGENT,
+            BadgeMetric.REFERRALS_QUALIFIED, 5),
+    RECRUITER_OR("Porte-voix", BadgeFamily.RECRUITER, BadgeTier.OR,
+            BadgeMetric.REFERRALS_QUALIFIED, 10),
+    RECRUITER_PLATINE("Rassembleur", BadgeFamily.RECRUITER, BadgeTier.PLATINE,
+            BadgeMetric.REFERRALS_QUALIFIED, 25),
+    RECRUITER_EMERAUDE("Fédérateur", BadgeFamily.RECRUITER, BadgeTier.EMERAUDE,
+            BadgeMetric.REFERRALS_QUALIFIED, 50),
+    RECRUITER_DIAMANT("Chef de tribu", BadgeFamily.RECRUITER, BadgeTier.DIAMANT,
+            BadgeMetric.REFERRALS_QUALIFIED, 100),
+
     // ── Exploration : nombre de sujets joués (XP > 0) ──────────────────────────────────────
     EXPLORER_FER("Explorateur", BadgeFamily.EXPLORATION, BadgeTier.FER, BadgeMetric.DISTINCT_TOPICS,
             3),

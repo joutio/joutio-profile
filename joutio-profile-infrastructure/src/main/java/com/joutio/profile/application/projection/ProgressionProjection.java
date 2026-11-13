@@ -155,6 +155,10 @@ public class ProgressionProjection {
                     .challengesSent(current.challengesSent() + 1)
                     .updatedAt(event.recordedAt())
                     .build();
+            case REFERRALS_QUALIFIED -> current.toBuilder()
+                    .referralsQualified(current.referralsQualified() + 1)
+                    .updatedAt(event.recordedAt())
+                    .build();
             default -> null;
         };
         if (updated == null) {

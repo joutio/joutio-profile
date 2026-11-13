@@ -62,7 +62,7 @@ class BadgeCatalogueTest {
                 .filter(badge -> !badge.isOneShot())
                 .collect(Collectors.groupingBy(badge -> badge.family() + "/" + badge.metric()));
 
-        assertEquals(12, ladders.size(), "12 échelles dans le catalogue");
+        assertEquals(13, ladders.size(), "13 échelles dans le catalogue");
         ladders.forEach((ladder, badges) -> {
             assertEquals(7, badges.size(), ladder + " doit porter sept paliers");
             List<Badge> sorted = badges.stream()
@@ -74,9 +74,9 @@ class BadgeCatalogueTest {
     }
 
     @Test
-    void catalogueHasEightyEightBadges() {
-        // 12 échelles × 7 paliers + 4 exploits ponctuels.
-        assertEquals(88, Badge.values().length);
+    void catalogueHasNinetyFiveBadges() {
+        // 13 échelles × 7 paliers + 4 exploits ponctuels.
+        assertEquals(95, Badge.values().length);
     }
 
     @Test
