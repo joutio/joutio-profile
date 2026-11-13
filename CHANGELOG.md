@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/joutio/joutio-profile/compare/v1.2.0...v1.3.0) (2026-11-13)
+
+### Features
+
+* **profile:** strict ISO 3166-1 alpha-2 country ([58d4ddd](https://github.com/joutio/joutio-profile/commit/58d4ddd8c670350400c43a5de894cf5363fe0a26))
+
 ## [1.2.0](https://github.com/joutio/joutio-profile/compare/v1.1.0...v1.2.0) (2026-11-12)
 
 ### Features
