@@ -33,7 +33,8 @@ public final class ProfileRules {
 
     public static final int MAX_BIO_LENGTH = 300;
 
-    public static final int MAX_COUNTRY_LENGTH = 100;
+    /** Pays : code ISO 3166-1 alpha-2, voir {@link CountryCodes}. */
+    public static final int COUNTRY_CODE_LENGTH = 2;
 
     /** Sérialisation JSON des options d'avatar DiceBear (styles micah, lorelei, notionists). */
     public static final int MAX_AVATAR_OPTIONS_LENGTH = 2000;

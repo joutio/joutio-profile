@@ -37,7 +37,8 @@ public class ProfileEntity {
     @Column(name = "bio", length = 300)
     private String bio;
 
-    @Column(name = "country", length = 100)
+    /** Code ISO 3166-1 alpha-2. */
+    @Column(name = "country", length = 2)
     private String country;
 
     @Column(name = "avatar_options", length = 2000)

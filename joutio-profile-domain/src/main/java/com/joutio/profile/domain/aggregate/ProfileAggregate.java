@@ -5,6 +5,7 @@ import com.joutio.profile.domain.command.ProfileCommand;
 import com.joutio.profile.domain.event.ProfileEvent;
 import com.joutio.profile.domain.exception.ProfileProblems;
 import com.joutio.profile.domain.model.PlayerTitle;
+import com.joutio.profile.domain.model.CountryCodes;
 import com.joutio.profile.domain.model.ProfileRules;
 import com.joutio.profile.domain.model.PseudonymGenerator;
 import com.joutio.profile.domain.port.out.PseudonymClaimPort;
@@ -161,8 +162,8 @@ public class ProfileAggregate {
     @CommandHandler
     public void handle(ProfileCommand.UpdateProfileCountryCommand command) {
         requireOwner(command.requestedBy());
-        validateCountry(command.userId(), command.country());
-        if (Objects.equals(command.country(), this.country)) {
+        String country = validateCountry(command.userId(), command.country());
+        if (Objects.equals(country, this.country)) {
             return;
         }
 
@@ -170,7 +171,7 @@ public class ProfileAggregate {
                 new ProfileEvent.ProfileCountryUpdatedEvent(
                         command.userId(),
                         command.requestedBy(),
-                        command.country(),
+                        country,
                         Instant.now()
                 )
         );
@@ -319,7 +320,8 @@ public class ProfileAggregate {
 
     @EventSourcingHandler
     public void on(ProfileEvent.ProfileCountryUpdatedEvent event) {
-        this.country = event.country();
+        // Événements antérieurs au 2026-11-13 : nom libre possible, converti en code ISO.
+        this.country = CountryCodes.normalize(event.country());
     }
 
     @EventSourcingHandler
@@ -373,10 +375,16 @@ public class ProfileAggregate {
         }
     }
 
-    private static void validateCountry(String userId, String country) {
-        if (country != null && country.length() > ProfileRules.MAX_COUNTRY_LENGTH) {
-            throw new ProfileProblems.CountryTooLongProblem(userId, country);
+    /** Code ISO alpha-2 (toute casse, rendu en majuscules) ; vide ou nul retire le pays. */
+    private static String validateCountry(String userId, String country) {
+        if (country == null || country.isBlank()) {
+            return null;
         }
+        String code = country.trim().toUpperCase(java.util.Locale.ROOT);
+        if (!CountryCodes.isValid(code)) {
+            throw new ProfileProblems.InvalidCountryProblem(userId, country);
+        }
+        return code;
     }
 
     private static void validateAvatarOptions(String userId, String avatarOptions) {

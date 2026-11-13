@@ -79,12 +79,12 @@ public interface ProfileProblems {
         }
     }
 
-    class CountryTooLongProblem extends ProfileProblem {
-        public CountryTooLongProblem(String userId, String country) {
-            super(userId, "urn:joutio:profile:countryTooLong",
+    class InvalidCountryProblem extends ProfileProblem {
+        public InvalidCountryProblem(String userId, String country) {
+            super(userId, "urn:joutio:profile:invalidCountry",
                     ProblemCategory.VALIDATION,
-                    "Country too long",
-                    "The country must not exceed " + ProfileRules.MAX_COUNTRY_LENGTH + " characters",
+                    "Invalid country",
+                    "The country must be an ISO 3166-1 alpha-2 code",
                     Map.of("country", country));
         }
     }

@@ -221,21 +221,48 @@ class ProfileAggregateTest {
     }
 
     @Test
-    void updateCountry_appliesCountryUpdatedEvent() {
+    void updateCountry_isoCode_appliesUppercasedCode() {
         fixture
                 .given(createdProfile())
-                .when(new ProfileCommand.UpdateProfileCountryCommand("user-1", "user-1", "France"))
+                .when(new ProfileCommand.UpdateProfileCountryCommand("user-1", "user-1", "fr"))
                 .expectEventsMatching(JoutioAxonMatchers.singlePayloadMatching(
                         ProfileEvent.ProfileCountryUpdatedEvent.class,
-                        e -> "France".equals(((ProfileEvent.ProfileCountryUpdatedEvent) e).country())));
+                        e -> "FR".equals(((ProfileEvent.ProfileCountryUpdatedEvent) e).country())));
     }
 
     @Test
-    void updateCountryTooLong_throwsValidationProblem() {
+    void updateCountry_freeName_isRejected() {
         fixture
                 .given(createdProfile())
-                .when(new ProfileCommand.UpdateProfileCountryCommand("user-1", "user-1", "x".repeat(101)))
-                .expectException(ProfileProblems.CountryTooLongProblem.class);
+                .when(new ProfileCommand.UpdateProfileCountryCommand("user-1", "user-1", "France"))
+                .expectException(ProfileProblems.InvalidCountryProblem.class);
+    }
+
+    @Test
+    void updateCountry_unknownCode_isRejected() {
+        fixture
+                .given(createdProfile())
+                .when(new ProfileCommand.UpdateProfileCountryCommand("user-1", "user-1", "ZZ"))
+                .expectException(ProfileProblems.InvalidCountryProblem.class);
+    }
+
+    @Test
+    void updateCountry_legacyNameEvent_isReadAsIsoCode() {
+        // Un ancien événement « France » rejoué vaut FR : choisir FR n'émet rien.
+        fixture
+                .given(createdProfile(), new ProfileEvent.ProfileCountryUpdatedEvent("user-1", "user-1", "France", java.time.Instant.now()))
+                .when(new ProfileCommand.UpdateProfileCountryCommand("user-1", "user-1", "FR"))
+                .expectNoEvents();
+    }
+
+    @Test
+    void updateCountry_blank_clearsCountry() {
+        fixture
+                .given(createdProfile(), new ProfileEvent.ProfileCountryUpdatedEvent("user-1", "user-1", "FR", java.time.Instant.now()))
+                .when(new ProfileCommand.UpdateProfileCountryCommand("user-1", "user-1", " "))
+                .expectEventsMatching(JoutioAxonMatchers.singlePayloadMatching(
+                        ProfileEvent.ProfileCountryUpdatedEvent.class,
+                        e -> ((ProfileEvent.ProfileCountryUpdatedEvent) e).country() == null));
     }
 
     @Test

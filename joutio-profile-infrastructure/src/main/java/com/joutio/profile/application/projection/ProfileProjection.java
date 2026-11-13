@@ -1,6 +1,7 @@
 package com.joutio.profile.application.projection;
 
 import com.joutio.profile.domain.event.ProfileEvent;
+import com.joutio.profile.domain.model.CountryCodes;
 import com.joutio.profile.domain.model.Profile;
 import com.joutio.profile.domain.model.ProfileRules;
 import com.joutio.profile.domain.port.out.ProfileRepositoryPort;
@@ -79,7 +80,7 @@ public class ProfileProjection {
     @Transactional
     public void on(ProfileEvent.ProfileCountryUpdatedEvent event) {
         update(event.userId(), event.updatedAt(),
-                profile -> profile.toBuilder().country(event.country()).build());
+                profile -> profile.toBuilder().country(CountryCodes.normalize(event.country())).build());
     }
 
     @EventHandler
