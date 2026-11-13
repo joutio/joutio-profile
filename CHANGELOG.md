@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/joutio/joutio-profile/compare/v1.3.0...v1.4.0) (2026-11-13)
+
+### Features
+
+* **profile:** Recruiter badge for qualified referrals ([0e6d232](https://github.com/joutio/joutio-profile/commit/0e6d2321bf4dcf24b2d8e4c6130a00deccc2b511))
+
 ## [1.3.0](https://github.com/joutio/joutio-profile/compare/v1.2.0...v1.3.0) (2026-11-13)
 
 ### Features
