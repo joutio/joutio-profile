@@ -58,7 +58,6 @@ public class BadgeAggregate {
     private int followersGained;
     private int challengesSent;
 
-    private int referralsQualified;
     private int perfectDuels;
     private int fastAnswersTotal;
     private int imageCorrectTotal;
@@ -145,7 +144,7 @@ public class BadgeAggregate {
 
         // Compteurs à jour : l'évaluation (et le replay) portent sur le même état.
         BadgeRules.CounterFacts facts =
-                new BadgeRules.CounterFacts(followersGained, challengesSent, referralsQualified);
+                new BadgeRules.CounterFacts(followersGained, challengesSent);
         for (Badge badge : BadgeRules.evaluateCounters(facts, badges)) {
             apply(new ProgressionEvent.BadgeEarnedEvent(command.userId(), badge, now));
         }
@@ -158,7 +157,6 @@ public class BadgeAggregate {
         switch (event.metric()) {
             case FOLLOWERS_GAINED -> this.followersGained++;
             case CHALLENGES_SENT -> this.challengesSent++;
-            case REFERRALS_QUALIFIED -> this.referralsQualified++;
             default -> {
                 // Métriques alimentées par les duels : rien à faire ici.
             }

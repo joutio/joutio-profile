@@ -32,7 +32,6 @@ public final class ProgressEntityMapper {
                 .imageCorrectTotal(entity.getImageCorrectTotal())
                 .followersGained(entity.getFollowersGained())
                 .challengesSent(entity.getChallengesSent())
-                .referralsQualified(entity.getReferralsQualified())
                 .currentDayStreak(entity.getCurrentDayStreak())
                 .bestDayStreak(entity.getBestDayStreak())
                 .lastActiveDate(entity.getLastActiveDate())
@@ -62,7 +61,6 @@ public final class ProgressEntityMapper {
         entity.setImageCorrectTotal(progress.imageCorrectTotal());
         entity.setFollowersGained(progress.followersGained());
         entity.setChallengesSent(progress.challengesSent());
-        entity.setReferralsQualified(progress.referralsQualified());
         entity.setCurrentDayStreak(progress.currentDayStreak());
         entity.setBestDayStreak(progress.bestDayStreak());
         entity.setLastActiveDate(progress.lastActiveDate());

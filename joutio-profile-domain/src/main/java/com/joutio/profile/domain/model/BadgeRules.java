@@ -71,15 +71,8 @@ public final class BadgeRules {
             /** Abonnés gagnés, cumulés. */
             int followersGained,
             /** Défis nominatifs lancés. */
-            int challengesSent,
-            /** Filleuls qualifiés (premier duel terminé). */
-            int referralsQualified
+            int challengesSent
     ) {
-
-        /** Compatibilité : compteurs sans parrainage. */
-        public CounterFacts(int followersGained, int challengesSent) {
-            this(followersGained, challengesSent, 0);
-        }
     }
 
     /**
@@ -95,7 +88,6 @@ public final class BadgeRules {
 
         collectReached(owned, BadgeMetric.FOLLOWERS_GAINED, facts.followersGained());
         collectReached(owned, BadgeMetric.CHALLENGES_SENT, facts.challengesSent());
-        collectReached(owned, BadgeMetric.REFERRALS_QUALIFIED, facts.referralsQualified());
         cascadeCollection(owned);
 
         owned.removeAll(alreadyEarned);

@@ -42,9 +42,6 @@ public enum BadgeMetric {
     /** Bonnes réponses cumulées sur les questions illustrées — famille Vision. */
     IMAGE_CORRECT,
 
-    /** Filleuls qualifiés (premier duel terminé) — famille Recruteur. */
-    REFERRALS_QUALIFIED,
-
     /** Nombre de badges obtenus (famille {@code COLLECTION}). */
     EARNED_BADGES,
 
