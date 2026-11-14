@@ -1,3 +1,13 @@
+## [2.0.0](https://github.com/joutio/joutio-profile/compare/v1.4.0...v2.0.0) (2026-11-14)
+
+### ⚠ BREAKING CHANGES
+
+* **profile:** remove the Recruiter badge family and referral tracking
+
+### Features
+
+* **profile:** remove the Recruiter badge family and referral tracking ([3c6a3ea](https://github.com/joutio/joutio-profile/commit/3c6a3eaaae2527abf439edad4d9de7e065e25add))
+
 ## [1.4.0](https://github.com/joutio/joutio-profile/compare/v1.3.0...v1.4.0) (2026-11-13)
 
 ### Features
