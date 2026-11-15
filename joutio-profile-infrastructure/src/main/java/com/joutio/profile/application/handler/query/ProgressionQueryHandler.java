@@ -1,10 +1,13 @@
 package com.joutio.profile.application.handler.query;
 
 import com.joutio.profile.domain.model.GameXp;
+import com.joutio.profile.domain.model.Badge;
 import com.joutio.profile.domain.model.PlayerProgress;
+import com.joutio.profile.domain.model.PlayerUnlocks;
 import com.joutio.profile.domain.model.TopicProgress;
 import com.joutio.profile.domain.port.out.ProgressionAwardedGameRepositoryPort;
 import com.joutio.profile.domain.port.out.ProgressionRepositoryPort;
+import com.joutio.profile.domain.port.out.UnlockRepositoryPort;
 import com.joutio.profile.domain.query.ProgressionQuery;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.stereotype.Component;
@@ -20,32 +23,51 @@ import java.util.stream.Collectors;
 /**
  * Handler Axon — queries de progression. Retourne une progression neutre
  * (0 XP, Elo de départ) pour un joueur n'ayant encore joué aucun duel.
+ *
+ * <p>Les badges viennent du read model des déblocages ({@code badge_unlock}) : ils ne dépendent
+ * pas de l'ordre d'arrivée des événements de progression et de badges.</p>
  */
 @Component
 public class ProgressionQueryHandler {
 
     private final ProgressionRepositoryPort progressionRepositoryPort;
     private final ProgressionAwardedGameRepositoryPort awardedGameRepositoryPort;
+    private final UnlockRepositoryPort unlockRepositoryPort;
 
     public ProgressionQueryHandler(ProgressionRepositoryPort progressionRepositoryPort,
-                                   ProgressionAwardedGameRepositoryPort awardedGameRepositoryPort) {
+                                   ProgressionAwardedGameRepositoryPort awardedGameRepositoryPort,
+                                   UnlockRepositoryPort unlockRepositoryPort) {
         this.progressionRepositoryPort = progressionRepositoryPort;
         this.awardedGameRepositoryPort = awardedGameRepositoryPort;
+        this.unlockRepositoryPort = unlockRepositoryPort;
     }
 
     @QueryHandler
     public PlayerProgress handle(ProgressionQuery.GetProgressionQuery query) {
-        return progressionRepositoryPort.findById(query.userId())
-                .orElseGet(() -> PlayerProgress.empty(query.userId()));
+        return handle(new ProgressionQuery.GetProgressionsByIdsQuery(List.of(query.userId())))
+                .getFirst();
     }
 
     @QueryHandler
     public List<PlayerProgress> handle(ProgressionQuery.GetProgressionsByIdsQuery query) {
         Map<String, PlayerProgress> byId = progressionRepositoryPort.findByIds(query.userIds()).stream()
                 .collect(Collectors.toMap(PlayerProgress::userId, Function.identity(), (a, _) -> a));
+        Map<String, Set<Badge>> badges = unlockRepositoryPort.findBadgesByUserIds(query.userIds());
         return query.userIds().stream()
-                .map(userId -> byId.getOrDefault(userId, PlayerProgress.empty(userId)))
+                .map(userId -> byId.getOrDefault(userId, PlayerProgress.empty(userId)).toBuilder()
+                        .badges(badges.getOrDefault(userId, Set.of()))
+                        .build())
                 .toList();
+    }
+
+    @QueryHandler
+    public PlayerUnlocks handle(ProgressionQuery.GetUnlocksQuery query) {
+        return unlockRepositoryPort.findByUserId(query.userId());
+    }
+
+    @QueryHandler
+    public List<PlayerUnlocks> handle(ProgressionQuery.GetUnlocksByIdsQuery query) {
+        return unlockRepositoryPort.findByUserIds(query.userIds());
     }
 
     @QueryHandler

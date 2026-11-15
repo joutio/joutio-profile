@@ -212,6 +212,34 @@ class BadgeAggregateTest {
     }
 
     @Test
+    void replayedCounterSource_isCountedOnce() {
+        // Livraison au-moins-une-fois : le même défi rejoué ne fait pas avancer le compteur.
+        fixture.given(new ProgressionEvent.BadgeCounterRecordedEvent(
+                        BADGE_ID, "user-1", BadgeMetric.CHALLENGES_SENT, "challenge-1",
+                        Instant.now()))
+                .when(new ProgressionCommand.RecordBadgeCounterCommand(
+                        BADGE_ID, "user-1", BadgeMetric.CHALLENGES_SENT, "challenge-1",
+                        Instant.now()))
+                .expectNoEvents();
+    }
+
+    @Test
+    void humanGameAtZeroXp_earnsMasteryFer() {
+        // Fer = première partie humaine du sujet, même perdue sans XP (règle des titres).
+        fixture.givenNoPriorActivity()
+                .when(duel("game-1", "topic-1", 0, 0, false, false, 0))
+                .expectEventsMatching(earned(Badge.MASTER_FER));
+    }
+
+    @Test
+    void botGame_neverEarnsMasteryFer() {
+        fixture.givenNoPriorActivity()
+                .when(duel("game-1", "topic-1", 0, 0, false, true, 0))
+                .expectEventsMatching(JoutioAxonMatchers.singlePayloadMatching(
+                        ProgressionEvent.BadgeFactsRecordedEvent.class, e -> true));
+    }
+
+    @Test
     void eighthTopic_earnsExplorerBronze() {
         fixture.given((Object[]) distinctTopics(Badge.EXPLORER_BRONZE.target() - 1))
                 .when(duel("game-8", "topic-8", 30, 30, false, false, 0))

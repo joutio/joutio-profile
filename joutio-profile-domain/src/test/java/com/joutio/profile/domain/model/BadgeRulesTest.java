@@ -82,6 +82,15 @@ class BadgeRulesTest {
     }
 
     @Test
+    void aHumanDuelWithoutXpStillEarnsMasteryFer() {
+        // Abandon ou défaite à 0 point : la partie humaine ouvre le Fer du sujet.
+        assertTrue(BadgeRules.evaluate(facts(0, false, 0, 1, 0, 0, 0), Set.of())
+                .contains(Badge.MASTER_FER));
+        assertFalse(BadgeRules.evaluate(facts(0, false, 0, 1, 0, 0, 0), Set.of())
+                .contains(Badge.MASTER_BRONZE));
+    }
+
+    @Test
     void aFirstWinEarnsExactlyThreeEntryBadges() {
         // Première victoire « normale » : volume + victoire + maîtrise. Pas de collection,
         // pas d'exploration (3 sujets), pas de précision (3 duels parfaits), pas de vision.

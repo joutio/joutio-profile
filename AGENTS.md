@@ -112,11 +112,14 @@ exposée par le service.
 **Queries** (`domain/query/ProfileQuery.java`) : `GetProfileQuery` (consommée par
 social/matchmaking pour le pseudonyme), `ProfileExistsByIdQuery` (consommée par social),
 `ProfileSearchQuery`.
-**Queries progression** (`ProgressionQuery.java`) : `GetProgressionQuery`, `GetTopicProgressionQuery`.
+**Queries progression** (`ProgressionQuery.java`) : `GetProgressionQuery`, `GetTopicProgressionQuery`,
+`GetUnlocksQuery` / `GetUnlocksByIdsQuery` → `PlayerUnlocks` (titres et badges **datés**, voir
+« Déblocages datés »).
 **Queries récompenses** (`RewardQuery.java`) : `GetPlayerRewardsQuery` → `RewardGrant` (code, source, date).
 
 **Ports sortants locaux** : `ProfileRepositoryPort` (persistance de la projection, dont
-`existsById`), `ProgressionRepositoryPort` (projection de progression).
+`existsById`), `ProgressionRepositoryPort` (projection de progression), `UnlockRepositoryPort`
+(déblocages datés).
 
 ---
 
@@ -192,7 +195,7 @@ partagé) — ces services ne dépendent plus de `joutio-identity-domain`.
   `STREAK_MASTER`) sont préservés (test dédié).
   Familles : **Volume** (duels entre joueurs **joués**), **Victoires** (`VICTORY` : duels entre
   joueurs **gagnés** — famille distincte, aucune famille ne mélange deux compteurs), **Maîtrise**
-  (XP du meilleur sujet, **alignée 1:1 sur les 7 paliers** : Initié 1 · Spécialiste 500 · Érudit
+  (XP du meilleur sujet, **alignée 1:1 sur les 7 paliers** : Initié = première partie humaine du sujet · Spécialiste 500 · Érudit
   1 500 · Autorité 4 000 · Sommité 9 000 · Oracle 21 000 · Panthéon 45 000),
   **Exploit** (faits ponctuels : première victoire, duel parfait, 5 réponses rapides, série de
   victoires), **Collection** (nombre de badges acquis — 8 / 20 / 35 / 50 / 65 / 78 / 85 sur
@@ -222,8 +225,8 @@ partagé) — ces services ne dépendent plus de `joutio-identity-domain`.
   > **pas modifiés** hors cet événement : `joutio-profile-infrastructure` consomme seulement leurs
   > contrats (pins
   > `joutio-social-domain` / `joutio-matchmaking-domain`). Les désabonnements ne retirent rien
-  > (un badge est définitif) et la livraison étant au-moins-une-fois, un rejeu ne peut que faire
-  > progresser un badge cosmétique.
+  > (un badge est définitif). La livraison est au-moins-une-fois : l'agrégat retient les
+  > `sourceId` déjà comptés (abonnement, défi) et ignore un rejeu, le compteur n'avance qu'une fois.
 - `AwardXpCommand` / `XpAwardedEvent` portent `correctAnswers`, `fastAnswers`, `draw` et
   `botGame` (issus de `GameEndedEvent`). **Règle produit** : un duel contre bot est un
   **entraînement** — `ProgressionRules.xpFor(score, won, botGame)` vaut **0 XP** et
@@ -251,12 +254,25 @@ partagé) — ces services ne dépendent plus de `joutio-identity-domain`.
   exploit (victoire, score parfait, réponses rapides), ni compteur de volume/maîtrise/série/
   assiduité/précision/rapidité/vision — tous ne progressent que sur les **parties contre des
   humains** (les compteurs affichés en projection suivent la même règle). Ordre d'émission stable
-  (`EnumSet`) → replay déterministe. Le read
-  model des badges est inchangé (badges écrits par la projection) ; deux compteurs ont été
+  (`EnumSet`) → replay déterministe. Les badges obtenus vivent dans le read model des
+  déblocages (`badge_unlock`, voir ci-dessous) ; des compteurs ont été
   ajoutés à `progression_entry` pour l'affichage de la progression (`perfect_duels`,
   `fast_answers_total`, migration `V10` ; `current_day_streak` / `best_day_streak` /
   `last_active_date`, migration `V11` ; `followers_gained` / `challenges_sent`, migration
   `V12` ; `image_correct_total`, migration `V13`).
+- **Déblocages datés** (2026-11-15, migration `V7`) : `UnlockProjection`
+  (`@ProcessingGroup("unlock-projection")`, groupe dédié, `@ResetHandler`, rejouable sans risque)
+  alimente `title_unlock(user_id, topic_id, tier, unlocked_at)` et
+  `badge_unlock(user_id, badge, earned_at)`, **sans clé étrangère** vers `progression_entry` (un
+  badge arrivé avant la ligne de progression n'est plus perdu). Écritures idempotentes
+  (`ON CONFLICT … LEAST(date)` : la date la plus ancienne est gardée). Règles :
+  - **titre Fer** = première partie **humaine** terminée dans le sujet (abandon compris, bot exclu),
+    daté par `XpAwardedEvent.awardedAt` ; même règle pour le badge `MASTER_FER` (même à 0 XP) ;
+  - **paliers suivants** : `PlayerProgressAggregate` émet **un `MasteryTierReachedEvent` par palier
+    franchi**, dans l'ordre (un duel qui saute Bronze et Argent annonce les deux) ;
+  - **badges** : `BadgeEarnedEvent.earnedAt`.
+  `PlayerProgress.badges` (queries de progression) est lu depuis `badge_unlock` ; l'ancienne table
+  `progression_badge` est supprimée (la prod repart d'un event store vide, aucun remplissage).
 - **Exposition** : `MasteryTier`, `Badge` (famille/palier/cible), les titres thématiques
   (`equippedTitle`) et les badges sont exposés par le BFF (`/api/profiles/{id}/badges`, `/titles`,
   `/title`) et affichés par le web (collection de badges par familles, sélecteur de titre porté,

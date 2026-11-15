@@ -4,6 +4,7 @@ import com.joutio.profile.domain.command.ProgressionCommand;
 import com.joutio.profile.domain.event.ProgressionEvent;
 import com.joutio.profile.domain.model.Badge;
 import com.joutio.profile.domain.model.ActivityRules;
+import com.joutio.profile.domain.model.BadgeMetric;
 import com.joutio.profile.domain.model.BadgeRules;
 import com.joutio.profile.domain.model.PlayerActivity;
 import com.joutio.profile.domain.model.ProgressionRules;
@@ -46,6 +47,8 @@ public class BadgeAggregate {
     private String userId;
 
     private final Set<String> evaluatedGameIds = new HashSet<>();
+    /** Sources déjà comptées par les compteurs hors duel (clé {@code METRIC|sourceId}). */
+    private final Set<String> recordedCounterSources = new HashSet<>();
     private final Map<String, Integer> xpByTopic = new HashMap<>();
     private final Set<Badge> badges = new HashSet<>();
     private int currentWinStreak;
@@ -120,8 +123,8 @@ public class BadgeAggregate {
 
     /**
      * Compteur **hors duel** (abonné gagné, défi lancé) : incrémente le compteur de la métrique
-     * puis réévalue les badges. La livraison est au-moins-une-fois (saga) : un rejeu ne peut que
-     * faire progresser un badge cosmétique, jamais le retirer.
+     * puis réévalue les badges. La livraison est au-moins-une-fois (saga) : une source déjà
+     * comptée ({@code sourceId} : abonnement, défi) est ignorée, le compteur n'avance qu'une fois.
      */
     @CommandHandler
     @CreationPolicy(AggregateCreationPolicy.CREATE_IF_MISSING)
@@ -131,6 +134,10 @@ public class BadgeAggregate {
         }
         if (this.userId == null) {
             this.userId = command.userId();
+        }
+        if (command.sourceId() != null
+                && recordedCounterSources.contains(counterSourceKey(command.metric(), command.sourceId()))) {
+            return;
         }
 
         Instant now = Instant.now();
@@ -154,6 +161,9 @@ public class BadgeAggregate {
     public void on(ProgressionEvent.BadgeCounterRecordedEvent event) {
         this.badgeId = event.badgeId();
         this.userId = event.userId();
+        if (event.sourceId() != null) {
+            this.recordedCounterSources.add(counterSourceKey(event.metric(), event.sourceId()));
+        }
         switch (event.metric()) {
             case FOLLOWERS_GAINED -> this.followersGained++;
             case CHALLENGES_SENT -> this.challengesSent++;
@@ -198,5 +208,9 @@ public class BadgeAggregate {
     @EventSourcingHandler
     public void on(ProgressionEvent.BadgeEarnedEvent event) {
         this.badges.add(event.badge());
+    }
+
+    private static String counterSourceKey(BadgeMetric metric, String sourceId) {
+        return metric + "|" + sourceId;
     }
 }

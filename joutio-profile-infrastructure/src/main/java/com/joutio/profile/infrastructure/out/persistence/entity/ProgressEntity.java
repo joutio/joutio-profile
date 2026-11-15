@@ -1,6 +1,5 @@
 package com.joutio.profile.infrastructure.out.persistence.entity;
 
-import com.joutio.profile.domain.model.Badge;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,12 +7,11 @@ import lombok.Setter;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * ProgressEntity — projection JPA de la progression d'un joueur.
+ * ProgressEntity — projection JPA de la progression d'un joueur (les badges vivent dans
+ * {@code badge_unlock}, voir {@link BadgeUnlockEntity}).
  * Table read-only mise à jour via les Event Handlers.
  */
 @Setter
@@ -50,11 +48,11 @@ public class ProgressEntity {
     @Column(name = "best_win_streak", nullable = false)
     private int bestWinStreak;
 
-    /** Duels parfaits cumulés (faits d'exploit, entraînement compris) — badge Précision. */
+    /** Duels parfaits cumulés (duels entre joueurs, entraînement exclu) — badge Précision. */
     @Column(name = "perfect_duels", nullable = false)
     private int perfectDuels;
 
-    /** Réponses rapides cumulées (faits d'exploit, entraînement compris) — badge Rapidité. */
+    /** Réponses rapides cumulées (duels entre joueurs, entraînement exclu) — badge Rapidité. */
     @Column(name = "fast_answers_total", nullable = false)
     private int fastAnswersTotal;
 
@@ -108,10 +106,4 @@ public class ProgressEntity {
     @MapKeyColumn(name = "topic_id", length = 255)
     @Column(name = "games", nullable = false)
     private Map<String, Integer> gamesByTopic = new HashMap<>();
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "progression_badge", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "badge", length = 50, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Set<Badge> badges = new HashSet<>();
 }

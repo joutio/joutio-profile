@@ -28,4 +28,17 @@ public interface ProgressionQuery {
      */
     record GetGamesXpQuery(String userId, List<String> gameIds) implements ProgressionQuery {
     }
+
+    /**
+     * Déblocages datés d'un joueur (titres thématiques et badges) → {@code PlayerUnlocks}.
+     */
+    record GetUnlocksQuery(String userId) implements ProgressionQuery {
+    }
+
+    /**
+     * Déblocages datés de plusieurs joueurs → {@code List<PlayerUnlocks>}, un élément par
+     * identifiant demandé.
+     */
+    record GetUnlocksByIdsQuery(List<String> userIds) implements ProgressionQuery {
+    }
 }

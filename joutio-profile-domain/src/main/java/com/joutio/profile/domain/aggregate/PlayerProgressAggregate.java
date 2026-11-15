@@ -111,15 +111,18 @@ public class PlayerProgressAggregate {
                 ratedDay
         ));
 
-        // Titre thématique : le palier de maîtrise du sujet franchi est annoncé (célébration).
+        // Titres thématiques : chaque palier franchi est annoncé, dans l'ordre, même quand un
+        // seul duel en saute plusieurs (le read model des déblocages date chaque titre). Le Fer
+        // n'est jamais annoncé ici : il s'obtient à la première partie humaine du sujet.
         int topicXpAfter = xpByTopic.getOrDefault(command.topicId(), 0);
         MasteryTier tierBefore = MasteryTier.tierFor(topicXpAfter - xp);
         MasteryTier tierAfter = MasteryTier.tierFor(topicXpAfter);
-        if (tierAfter.ordinal() > tierBefore.ordinal()) {
+        MasteryTier[] tiers = MasteryTier.values();
+        for (int ordinal = tierBefore.ordinal() + 1; ordinal <= tierAfter.ordinal(); ordinal++) {
             AggregateLifecycle.apply(new ProgressionEvent.MasteryTierReachedEvent(
                     command.userId(),
                     command.topicId(),
-                    tierAfter,
+                    tiers[ordinal],
                     now
             ));
         }

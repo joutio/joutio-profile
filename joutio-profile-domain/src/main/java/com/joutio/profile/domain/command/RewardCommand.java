@@ -2,6 +2,7 @@ package com.joutio.profile.domain.command;
 
 import com.joutio.profile.domain.model.RewardCode;
 import com.joutio.profile.domain.model.RewardSource;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.time.Instant;
 
@@ -9,7 +10,7 @@ import java.time.Instant;
 public interface RewardCommand {
 
     record GrantRewardCommand(
-            String rewardId,
+            @TargetAggregateIdentifier String rewardId,
             String userId,
             RewardCode rewardCode,
             RewardSource source,

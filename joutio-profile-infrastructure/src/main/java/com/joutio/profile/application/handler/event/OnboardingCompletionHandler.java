@@ -11,8 +11,9 @@ import java.time.Instant;
 
 /**
  * La première partie humaine terminée vaut onboarding implicite : un joueur invité dans une
- * room privée a joué avant de voir le flow, il n'a plus besoin de celui-ci. Le bot et les
- * parties annulées n'émettent pas d'XP et ne déclenchent donc pas ce marquage.
+ * room privée a joué avant de voir le flow, il n'a plus besoin de celui-ci. Un entraînement
+ * contre le bot émet bien un {@code XpAwardedEvent} (0 XP, {@code botGame}) : il est écarté
+ * explicitement. Une partie annulée n'émet aucun événement d'XP.
  */
 @Component
 @ProcessingGroup("progression-projection")

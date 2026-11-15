@@ -4,7 +4,7 @@ import com.joutio.profile.domain.model.PlayerProgress;
 import com.joutio.profile.infrastructure.out.persistence.entity.ProgressEntity;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Mapper infrastructure — ProgressEntity (JPA) ⇄ PlayerProgress (domaine).
@@ -19,7 +19,8 @@ public final class ProgressEntityMapper {
                 .userId(entity.getUserId())
                 .xpByTopic(new HashMap<>(entity.getXpByTopic()))
                 .gamesByTopic(new HashMap<>(entity.getGamesByTopic()))
-                .badges(new HashSet<>(entity.getBadges()))
+                // Badges lus à part dans badge_unlock (ProgressionQueryHandler).
+                .badges(Set.of())
                 .gamesPlayed(entity.getGamesPlayed())
                 .wins(entity.getWins())
                 .losses(entity.getLosses())
@@ -48,7 +49,6 @@ public final class ProgressEntityMapper {
         entity.setUserId(progress.userId());
         entity.setXpByTopic(new HashMap<>(progress.xpByTopic()));
         entity.setGamesByTopic(new HashMap<>(progress.gamesByTopic()));
-        entity.setBadges(new HashSet<>(progress.badges()));
         entity.setGamesPlayed(progress.gamesPlayed());
         entity.setWins(progress.wins());
         entity.setLosses(progress.losses());

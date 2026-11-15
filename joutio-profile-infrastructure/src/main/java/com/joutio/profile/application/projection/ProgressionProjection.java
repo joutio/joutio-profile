@@ -2,7 +2,6 @@ package com.joutio.profile.application.projection;
 
 import com.joutio.profile.domain.event.ProgressionEvent;
 import com.joutio.profile.domain.model.ActivityRules;
-import com.joutio.profile.domain.model.Badge;
 import com.joutio.profile.domain.model.PlayerActivity;
 import com.joutio.profile.domain.model.PlayerProgress;
 import com.joutio.profile.domain.model.ProgressionRules;
@@ -19,13 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * ProgressionProjection — maintient la projection read-only de la progression
- * (XP par thème, Elo, compteurs et badges).
+ * (XP par thème, Elo et compteurs). Les badges et les titres datés sont projetés par
+ * {@link UnlockProjection}.
  */
 @Component
 @ProcessingGroup("progression-projection")
@@ -164,19 +162,5 @@ public class ProgressionProjection {
         progressionRepositoryPort.save(updated);
         logger.debug("Compteur de badge projeté: userId={}, métrique={}",
                 event.userId(), event.metric());
-    }
-
-    @EventHandler
-    @Transactional
-    public void on(ProgressionEvent.BadgeEarnedEvent event) {
-        progressionRepositoryPort.findById(event.userId())
-                .ifPresent(progress -> {
-                    Set<Badge> badges = new HashSet<>(progress.badges());
-                    badges.add(event.badge());
-                    progressionRepositoryPort.save(progress.toBuilder()
-                            .badges(badges)
-                            .updatedAt(event.earnedAt())
-                            .build());
-                });
     }
 }

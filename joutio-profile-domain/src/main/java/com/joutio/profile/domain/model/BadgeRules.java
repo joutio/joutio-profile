@@ -114,6 +114,9 @@ public final class BadgeRules {
         owned.addAll(alreadyEarned);
 
         collectExploits(owned, facts);
+        // Maîtrise Fer : une partie humaine dans le sujet suffit, même à 0 XP (abandon compris),
+        // comme le titre Fer. Les paliers suivants restent portés par l'XP du sujet.
+        owned.add(Badge.MASTER_FER);
         collectReached(owned, BadgeMetric.HUMAN_DUELS, facts.humanDuels());
         collectReached(owned, BadgeMetric.HUMAN_WINS, facts.humanWins());
         collectReached(owned, BadgeMetric.TOPIC_MASTERY, facts.topicXp());

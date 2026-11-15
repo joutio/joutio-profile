@@ -7,9 +7,12 @@ import com.joutio.profile.domain.model.RewardCode;
 import com.joutio.profile.domain.model.RewardRules;
 import com.joutio.profile.domain.model.RewardSource;
 import org.axonframework.test.aggregate.AggregateTestFixture;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerRewardAggregateTest {
 
@@ -38,5 +41,12 @@ class PlayerRewardAggregateTest {
                         RewardRules.rewardIdFor("user-1"), "user-1",
                         RewardCode.MICAH_AVATAR, RewardSource.BADGE, at))
                 .expectNoEvents();
+    }
+
+    @Test
+    void grantCommand_targetsTheRewardAggregateIdentifier() throws NoSuchFieldException {
+        // Sans @TargetAggregateIdentifier, Axon ne sait pas router la commande vers rewards:<userId>.
+        assertTrue(RewardCommand.GrantRewardCommand.class.getDeclaredField("rewardId")
+                .isAnnotationPresent(TargetAggregateIdentifier.class));
     }
 }

@@ -1,6 +1,11 @@
 # Plan (à exécuter) : badges et titres datés et fiables (joutio-profile → BFF → @joutio/client → apps)
 
-> Rédigé le 2026-11-15, non exécuté. Statut : en attente.
+> Rédigé le 2026-11-15. Statut : **lot 1 (joutio-profile) implémenté**, en attente de release ; lots 2 à 5 à suivre.
+>
+> **Décision du 2026-11-15** : la prod est remise à zéro. Le remplissage de l'historique depuis l'event store
+> (`ProgressionEventStorePort`, `UnlockBackfill`, `unlock_backfill_run`), l'upcaster des `RECRUITER_*` et la copie de
+> `progression_badge` sont abandonnés ; `progression_badge` est supprimée dès `V7`. `MASTER_FER` est ajouté par
+> `BadgeRules.evaluate` à toute partie humaine (pas de champ `topicPlayed` : l'évaluation s'arrête déjà sur un bot).
 
 ## Contexte
 

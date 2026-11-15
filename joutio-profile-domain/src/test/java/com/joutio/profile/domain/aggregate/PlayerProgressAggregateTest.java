@@ -5,10 +5,13 @@ import com.joutio.profile.domain.command.ProgressionCommand;
 import com.joutio.profile.domain.event.ProgressionEvent;
 import com.joutio.profile.domain.model.MasteryTier;
 import com.joutio.profile.domain.model.ProgressionRules;
+import org.axonframework.eventhandling.EventMessage;
+import org.axonframework.test.matchers.Matchers;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * Test Axon in-memory de {@link PlayerProgressAggregate} : attribution XP par thème,
@@ -68,6 +71,36 @@ class PlayerProgressAggregateTest {
                             return MasteryTier.OR == reached.tier()
                                     && "topic-1".equals(reached.topicId());
                         }));
+    }
+
+    @Test
+    void jumpingTwoMasteryTiers_announcesEachTierInOrder() {
+        // 0 XP puis un duel à 2 050 XP : Bronze (500) et Argent (1 500) sont franchis d'un coup.
+        fixture
+                .givenNoPriorActivity()
+                .when(new ProgressionCommand.AwardXpCommand(
+                        ProgressionRules.progressIdFor("user-1"), "user-1", "game-1", "topic-1",
+                        2_000, true, false, false, 4, 2, 0, null, null, null))
+                .expectEventsMatching(Matchers.<List<EventMessage<?>>>matches(events ->
+                        events.stream()
+                                .map(EventMessage::getPayload)
+                                .filter(ProgressionEvent.MasteryTierReachedEvent.class::isInstance)
+                                .map(payload -> ((ProgressionEvent.MasteryTierReachedEvent) payload).tier())
+                                .toList()
+                                .equals(List.of(MasteryTier.BRONZE, MasteryTier.ARGENT))));
+    }
+
+    @Test
+    void firstHumanGameBelowBronze_announcesNoTier() {
+        // Le Fer n'est jamais annoncé par l'agrégat : le read model le déduit de la partie humaine.
+        fixture
+                .givenNoPriorActivity()
+                .when(new ProgressionCommand.AwardXpCommand(
+                        ProgressionRules.progressIdFor("user-1"), "user-1", "game-1", "topic-1",
+                        0, false, false, false, 0, 0, 0, null, null, null))
+                .expectEventsMatching(Matchers.<List<EventMessage<?>>>matches(events ->
+                        events.stream().map(EventMessage::getPayload)
+                                .noneMatch(ProgressionEvent.MasteryTierReachedEvent.class::isInstance)));
     }
 
     @Test

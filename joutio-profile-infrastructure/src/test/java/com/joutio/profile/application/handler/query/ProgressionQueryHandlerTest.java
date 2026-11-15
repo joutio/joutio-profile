@@ -1,17 +1,21 @@
 package com.joutio.profile.application.handler.query;
 
+import com.joutio.profile.domain.model.Badge;
 import com.joutio.profile.domain.model.GameXp;
 import com.joutio.profile.domain.model.MasteryTier;
 import com.joutio.profile.domain.model.PlayerProgress;
+import com.joutio.profile.domain.model.PlayerUnlocks;
 import com.joutio.profile.domain.model.TopicProgress;
 import com.joutio.profile.domain.port.out.ProgressionAwardedGameRepositoryPort;
 import com.joutio.profile.domain.port.out.ProgressionRepositoryPort;
+import com.joutio.profile.domain.port.out.UnlockRepositoryPort;
 import com.joutio.profile.domain.query.ProgressionQuery;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -23,8 +27,9 @@ class ProgressionQueryHandlerTest {
     private final ProgressionRepositoryPort progressionRepository = mock(ProgressionRepositoryPort.class);
     private final ProgressionAwardedGameRepositoryPort awardedGameRepository =
             mock(ProgressionAwardedGameRepositoryPort.class);
+    private final UnlockRepositoryPort unlockRepository = mock(UnlockRepositoryPort.class);
     private final ProgressionQueryHandler handler =
-            new ProgressionQueryHandler(progressionRepository, awardedGameRepository);
+            new ProgressionQueryHandler(progressionRepository, awardedGameRepository, unlockRepository);
 
     @Test
     void games_xp_delegates_to_awarded_journal() {
@@ -97,5 +102,40 @@ class ProgressionQueryHandlerTest {
                 new ProgressionQuery.GetTopicProgressionsQuery("unknown"));
 
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void progression_badges_come_from_unlocks_even_without_progression_row() {
+        // Un badge hors duel (abonné gagné) peut précéder toute ligne de progression.
+        when(progressionRepository.findByIds(List.of("me"))).thenReturn(List.of());
+        when(unlockRepository.findBadgesByUserIds(List.of("me")))
+                .thenReturn(Map.of("me", Set.of(Badge.SOCIAL_FER)));
+
+        PlayerProgress result = handler.handle(new ProgressionQuery.GetProgressionQuery("me"));
+
+        assertThat(result.userId()).isEqualTo("me");
+        assertThat(result.badges()).containsExactly(Badge.SOCIAL_FER);
+    }
+
+    @Test
+    void progressions_by_ids_attach_each_player_badges() {
+        when(progressionRepository.findByIds(List.of("a", "b")))
+                .thenReturn(List.of(PlayerProgress.empty("a"), PlayerProgress.empty("b")));
+        when(unlockRepository.findBadgesByUserIds(List.of("a", "b")))
+                .thenReturn(Map.of("a", Set.of(Badge.DUELIST_FER)));
+
+        List<PlayerProgress> result = handler.handle(
+                new ProgressionQuery.GetProgressionsByIdsQuery(List.of("a", "b")));
+
+        assertThat(result.get(0).badges()).containsExactly(Badge.DUELIST_FER);
+        assertThat(result.get(1).badges()).isEmpty();
+    }
+
+    @Test
+    void unlocks_delegate_to_the_unlock_read_model() {
+        PlayerUnlocks unlocks = PlayerUnlocks.empty("me");
+        when(unlockRepository.findByUserId("me")).thenReturn(unlocks);
+
+        assertThat(handler.handle(new ProgressionQuery.GetUnlocksQuery("me"))).isSameAs(unlocks);
     }
 }
