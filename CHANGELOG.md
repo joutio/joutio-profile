@@ -1,3 +1,13 @@
+## [3.0.0](https://github.com/joutio/joutio-profile/compare/v2.0.0...v3.0.0) (2026-11-15)
+
+### ⚠ BREAKING CHANGES
+
+* **profile:** progression_badge is dropped; badges are read from badge_unlock.
+
+### Features
+
+* **profile:** dated title and badge unlocks ([249e6bb](https://github.com/joutio/joutio-profile/commit/249e6bbaa494703df999b61c484669bc80ffd9cc))
+
 ## [2.0.0](https://github.com/joutio/joutio-profile/compare/v1.4.0...v2.0.0) (2026-11-14)
 
 ### ⚠ BREAKING CHANGES
