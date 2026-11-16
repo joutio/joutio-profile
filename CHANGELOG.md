@@ -1,3 +1,9 @@
+## [4.0.1](https://github.com/joutio/joutio-profile/compare/v4.0.0...v4.0.1) (2026-11-16)
+
+### Bug Fixes
+
+* **build:** pin joutio-identity-domain 2.3.0 ([adbd392](https://github.com/joutio/joutio-profile/commit/adbd392b254485298b40022a206987004adc6084))
+
 ## [4.0.0](https://github.com/joutio/joutio-profile/compare/v3.0.0...v4.0.0) (2026-11-16)
 
 ### ⚠ BREAKING CHANGES
