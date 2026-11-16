@@ -37,7 +37,6 @@ public interface ProgressionEvent {
             int peakRating,
             /** Nombre de duels classés cumulés. */
             int ratedGames,
-            boolean provisional,
             /** Variation d'Elo du duel (0 si non classé ou plafond anti-farm atteint). */
             int ratingDelta,
             /** Adversaire classé du duel, `null` si non classé. */

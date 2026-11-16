@@ -154,10 +154,10 @@ partagé) — ces services ne dépendent plus de `joutio-identity-domain`.
 
 - `ProgressionResponse` porte `duelStats` (joués, victoires, défaites, égalités, winrate, meilleur
   score, meilleure série) et `TopicProgressResponse` porte `title` (titre par thème).
-- **Elo global du profil** (`EloRules`) : départ **200**, provisoire sur **10 duels classés**,
-  `K=40` puis `20`, victoire `1` / nul `0.5` / défaite `0`. Tous les duels humains comptent, avec
+- **Elo global du profil** (`EloRules`) : départ **200**, facteur **K fixe = 20** dès le premier duel classé (2026-11-16 : plus de
+  période provisoire « non classé », le joueur a un Elo et un palier dès son premier duel), victoire `1` / nul `0.5` / défaite `0`. Tous les duels humains comptent, avec
   un **plafond anti-farm de 2 duels par paire et par jour** ; les duels bot sont exclus. L'Elo est
-  porté par `progression_entry` (`rating`, `peak_rating`, `rated_games`, `provisional`) et mis à
+  porté par `progression_entry` (`rating`, `peak_rating`, `rated_games` ; colonne `provisional` supprimée en V8) et mis à
   jour par `AwardProgressSaga` + `PlayerProgressAggregate` ; il ne remplace pas l'XP de sujet, qui
   reste la source des titres, badges et classements par thème.
 - **XP par thème** : `XpAwardedEvent` porte l'XP du sujet et l'Elo. Il n'existe plus d'XP globale,

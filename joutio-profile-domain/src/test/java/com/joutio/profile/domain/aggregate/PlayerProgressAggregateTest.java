@@ -59,7 +59,7 @@ class PlayerProgressAggregateTest {
                 .given(new ProgressionEvent.XpAwardedEvent(
                         "user-1", "game-0", "topic-1",
                         MasteryTier.OR.xpThreshold() - 100, 160, true, false, false, 4, 2, 0,
-                        Instant.now(), 200, 200, 0, true, 0, null, null))
+                        Instant.now(), 200, 200, 0, 0, null, null))
                 .when(new ProgressionCommand.AwardXpCommand(
                         ProgressionRules.progressIdFor("user-1"), "user-1", "game-1", "topic-1",
                         160, true, false, false, 4, 2, 0, null, null, null))
@@ -104,7 +104,7 @@ class PlayerProgressAggregateTest {
     }
 
     @Test
-    void humanWin_updatesEloAndKeepsProvisionalOnFirstRatedGame() {
+    void humanWin_updatesEloWithTheFixedKFromTheFirstRatedGame() {
         fixture
                 .givenNoPriorActivity()
                 .when(new ProgressionCommand.AwardXpCommand(
@@ -115,11 +115,10 @@ class PlayerProgressAggregateTest {
                         ProgressionEvent.XpAwardedEvent.class,
                         e -> {
                             ProgressionEvent.XpAwardedEvent xp = (ProgressionEvent.XpAwardedEvent) e;
-                            return xp.ratingDelta() == 20
-                                    && xp.rating() == 220
-                                    && xp.peakRating() == 220
-                                    && xp.ratedGames() == 1
-                                    && xp.provisional();
+                            return xp.ratingDelta() == 10
+                                    && xp.rating() == 210
+                                    && xp.peakRating() == 210
+                                    && xp.ratedGames() == 1;
                         }));
     }
 
@@ -127,7 +126,7 @@ class PlayerProgressAggregateTest {
     void sameGameId_isIdempotent() {
         fixture
                 .given(new ProgressionEvent.XpAwardedEvent(
-                        "user-1", "game-1", "topic-1", 100, 100, false, false, false, 4, 2, 0, Instant.now(), 200, 200, 0, true, 0, null, null))
+                        "user-1", "game-1", "topic-1", 100, 100, false, false, false, 4, 2, 0, Instant.now(), 200, 200, 0, 0, null, null))
                 .when(new ProgressionCommand.AwardXpCommand(ProgressionRules.progressIdFor("user-1"), "user-1", "game-1", "topic-1", 100, true, false, false, 4, 2, 0, null, null, null))
                 .expectNoEvents();
     }

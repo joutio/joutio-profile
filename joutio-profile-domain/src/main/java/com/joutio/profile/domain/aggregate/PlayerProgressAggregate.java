@@ -43,7 +43,6 @@ public class PlayerProgressAggregate {
     private int rating = EloRules.INITIAL_RATING;
     private int peakRating = EloRules.INITIAL_RATING;
     private int ratedGames;
-    private boolean provisional = true;
 
     protected PlayerProgressAggregate() {
     }
@@ -80,7 +79,7 @@ public class PlayerProgressAggregate {
             int playedToday = ratedOpponentDayCounts.getOrDefault(opponentDayKey, 0);
             if (playedToday < EloRules.DAILY_OPPONENT_CAP) {
                 double score = command.draw() ? 0.5 : command.won() ? 1.0 : 0.0;
-                newRating = EloRules.newRating(rating, command.opponentRating(), score, ratedGames);
+                newRating = EloRules.newRating(rating, command.opponentRating(), score);
                 newPeakRating = Math.max(peakRating, newRating);
                 newRatedGames = ratedGames + 1;
                 ratingDelta = newRating - rating;
@@ -105,7 +104,6 @@ public class PlayerProgressAggregate {
                 newRating,
                 newPeakRating,
                 newRatedGames,
-                EloRules.isProvisional(newRatedGames),
                 ratingDelta,
                 ratedOpponentId,
                 ratedDay
@@ -137,7 +135,6 @@ public class PlayerProgressAggregate {
         this.rating = event.rating();
         this.peakRating = event.peakRating();
         this.ratedGames = event.ratedGames();
-        this.provisional = event.provisional();
         if (event.ratedOpponentId() != null && event.ratedDay() != null) {
             this.ratedOpponentDayCounts.merge(
                     event.ratedDay() + "|" + event.ratedOpponentId(), 1, Integer::sum);

@@ -41,9 +41,7 @@ public record PlayerProgress(
         /** Meilleur Elo atteint (trophée de carrière). */
         int peakRating,
         /** Nombre de duels classés (hors bot, hors plafond anti-farm). */
-        int ratedGames,
-        /** Elo encore provisoire (moins de {@link EloRules#PROVISIONAL_GAMES} duels classés). */
-        boolean provisional
+        int ratedGames
 ) {
 
     public PlayerProgress {
@@ -56,7 +54,6 @@ public record PlayerProgress(
         rating = Math.max(0, rating);
         peakRating = Math.max(peakRating, rating);
         ratedGames = Math.max(0, ratedGames);
-        provisional = EloRules.isProvisional(ratedGames);
     }
 
     /**
@@ -87,7 +84,6 @@ public record PlayerProgress(
                 .rating(EloRules.INITIAL_RATING)
                 .peakRating(EloRules.INITIAL_RATING)
                 .ratedGames(0)
-                .provisional(true)
                 .build();
     }
 

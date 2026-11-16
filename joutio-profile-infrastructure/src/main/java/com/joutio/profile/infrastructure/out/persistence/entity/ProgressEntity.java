@@ -92,9 +92,6 @@ public class ProgressEntity {
     @Column(name = "rated_games", nullable = false)
     private int ratedGames;
 
-    @Column(name = "provisional", nullable = false)
-    private boolean provisional;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "progression_topic_entry", joinColumns = @JoinColumn(name = "user_id"))
     @MapKeyColumn(name = "topic_id", length = 255)

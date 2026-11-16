@@ -127,7 +127,6 @@ public class ProgressionProjection {
                 .rating(event.rating())
                 .peakRating(event.peakRating())
                 .ratedGames(event.ratedGames())
-                .provisional(event.provisional())
                 .build());
 
         logger.info("Progression projetée: userId={}, sujet={}, +{} XP, Elo={} (+{})",

@@ -61,6 +61,6 @@ class UnlockProjectionTest {
     private static ProgressionEvent.XpAwardedEvent xpAwarded(int xp, boolean botGame) {
         return new ProgressionEvent.XpAwardedEvent(
                 "user-1", "game-1", "topic-1", xp, 30, false, false, botGame, 0, 0, 0, AT,
-                200, 200, 0, true, 0, null, null);
+                200, 200, 0, 0, null, null);
     }
 }

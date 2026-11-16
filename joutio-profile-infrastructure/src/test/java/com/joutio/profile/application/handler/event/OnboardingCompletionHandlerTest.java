@@ -35,6 +35,6 @@ class OnboardingCompletionHandlerTest {
         return new ProgressionEvent.XpAwardedEvent(
                 "user-1", "game-1", "topic-1", 10, 100, true, false, botGame,
                 8, 2, 0, Instant.parse("2026-10-23T10:00:00Z"),
-                1000, 1000, 0, true, 0, null, null);
+                1000, 1000, 0, 0, null, null);
     }
 }

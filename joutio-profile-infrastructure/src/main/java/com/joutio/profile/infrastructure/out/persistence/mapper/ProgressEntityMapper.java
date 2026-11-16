@@ -40,7 +40,6 @@ public final class ProgressEntityMapper {
                 .rating(entity.getRating())
                 .peakRating(entity.getPeakRating())
                 .ratedGames(entity.getRatedGames())
-                .provisional(entity.isProvisional())
                 .build();
     }
 
@@ -68,7 +67,6 @@ public final class ProgressEntityMapper {
         entity.setRating(progress.rating());
         entity.setPeakRating(progress.peakRating());
         entity.setRatedGames(progress.ratedGames());
-        entity.setProvisional(progress.provisional());
         return entity;
     }
 }
