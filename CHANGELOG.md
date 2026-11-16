@@ -1,3 +1,16 @@
+## [4.0.0](https://github.com/joutio/joutio-profile/compare/v3.0.0...v4.0.0) (2026-11-16)
+
+### ⚠ BREAKING CHANGES
+
+* **elo:** provisional is removed from PlayerProgress and XpAwardedEvent; the progression_entry
+provisional column is dropped (V8).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+### Features
+
+* **elo:** fixed K factor from the first rated duel ([bb8755e](https://github.com/joutio/joutio-profile/commit/bb8755e4e003e687864172af62f458c490501e14))
+
 ## [3.0.0](https://github.com/joutio/joutio-profile/compare/v2.0.0...v3.0.0) (2026-11-15)
 
 ### ⚠ BREAKING CHANGES
