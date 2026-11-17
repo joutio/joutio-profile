@@ -35,7 +35,7 @@ public class CreateProfileSaga {
                 new ProfileCommand.CreateProfileCommand(
                         event.userId(),
                         event.email(),
-                        PseudonymGenerator.generate()
+                        PseudonymGenerator.generate(event.userId(), 0)
                 )
         );
 

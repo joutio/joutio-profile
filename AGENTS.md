@@ -102,5 +102,5 @@ mvn -pl joutio-profile-infrastructure test
 - Les codes de badges, paliers et métriques sont des enums qui traversent le bus. Les ajouter ou
   les renommer impose de déployer le BFF (consommateur) **avant** profile
   ([contrats](../../docs/backend/contrats-et-build.md#versions-et-releases)).
-- `PseudonymGenerator` et la saga de jeu ne sont pas déterministes au replay
-  (`docs/ROADMAP.md`, Dette).
+- `PseudonymGenerator` est déterministe (identifiant du joueur + tentative) : la saga de création propose le même
+  pseudonyme à chaque rejeu.

@@ -1,9 +1,12 @@
 package com.joutio.profile.domain.model;
 
-import java.util.Random;
+import java.nio.charset.StandardCharsets;
+import java.util.SplittableRandom;
+import java.util.UUID;
 
 /**
- * Génère le pseudonyme initial d'un joueur (ex. {@code SwiftFox42}).
+ * Pseudonyme initial d'un joueur (ex. {@code SwiftFox42}), **déterministe** : dérivé de l'identifiant du joueur et du
+ * numéro de tentative, il est le même à chaque rejeu de la saga ou de la commande qui le propose.
  */
 public final class PseudonymGenerator {
 
@@ -23,16 +26,16 @@ public final class PseudonymGenerator {
             "Raven", "Shark", "Tiger", "Wolf", "Zebra"
     };
 
-    private static final Random random = new Random();
-
     private PseudonymGenerator() {
         //
     }
 
     /**
-     * Génère un pseudonyme du type "SwiftFox42".
+     * Pseudonyme du type "SwiftFox42" pour ce joueur et cette tentative (0 pour la première proposition).
      */
-    public static String generate() {
+    public static String generate(String userId, int attempt) {
+        SplittableRandom random = new SplittableRandom(
+                UUID.nameUUIDFromBytes((userId + ":" + attempt).getBytes(StandardCharsets.UTF_8)).getMostSignificantBits());
         String adj    = ADJECTIVES[random.nextInt(ADJECTIVES.length)];
         String animal = ANIMALS[random.nextInt(ANIMALS.length)];
         return adj + animal + (10 + random.nextInt(90));

@@ -86,7 +86,7 @@ public class ProfileAggregate {
             return proposed;
         }
         for (int attempt = 0; attempt < INITIAL_PSEUDONYM_ATTEMPTS; attempt++) {
-            String candidate = PseudonymGenerator.generate();
+            String candidate = PseudonymGenerator.generate(userId, attempt + 1);
             if (claims.claim(ProfileRules.pseudonymKey(candidate), userId)) {
                 return candidate;
             }
