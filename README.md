@@ -1,10 +1,6 @@
 # joutio-profile
 
-Gestion des **profils modifiables** des utilisateurs (nom public, bio, pays) :
+Profils publics, présence et progression des joueurs.
 
-- **Lecture** : le profil est lu côté frontend depuis le JWT (identity) ; ce service expose
-  `GET /api/profiles/{userId}` et `POST /api/profiles/search` (projection JPA).
-- **Écriture** : `PUT /api/profiles/{userId}` — propriétaire uniquement (403 sinon).
-- **Création** : saga déclenchée par `UserRegisteredEvent` du service identity.
-
-> Voir `AGENTS.md` pour le détail des endpoints, use cases et dépendances.
+Service du workspace Joutio : règles, état et commandes dans [`AGENTS.md`](AGENTS.md) ; documentation
+commune dans `docs/` du workspace.

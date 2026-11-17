@@ -11,7 +11,7 @@ import java.util.Optional;
  * langue du lecteur et l'ajout ultérieur d'un gentilé éditorial.</p>
  *
  * <p>L'appartenance du titre au joueur (palier réellement atteint dans ce sujet) est vérifiée par
- * l'appelant, qui prépare la commande (cf. `best-practices/.backend/command-preparation.md`).</p>
+ * l'appelant, qui prépare la commande (cf. `docs/backend/axon.md`).</p>
  */
 public record PlayerTitle(String topicId, MasteryTier tier) {
 

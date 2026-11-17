@@ -1,19 +1,19 @@
--- Joutio profile — baseline schema (squashed from V1..V20)
--- Generated from a fresh PostgreSQL 16 database after applying the legacy migrations.
+-- Joutio profile — schéma complet (pg_dump, PostgreSQL 16).
+-- V1 unique avant l'ouverture publique : toute évolution modifie ce fichier et impose une remise à zéro
+-- de la base (docs/backend/conventions.md, section Base de données).
 
 --
 -- PostgreSQL database dump
 --
 
 
--- Dumped from database version 16.13
--- Dumped by pg_dump version 16.13
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
@@ -22,6 +22,24 @@ SET row_security = off;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: badge_unlock; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.badge_unlock (
+    user_id character varying(255) NOT NULL,
+    badge character varying(50) NOT NULL,
+    earned_at timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE badge_unlock; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.badge_unlock IS 'Badges obtenus, datés (source de vérité des badges du read model)';
+
 
 --
 -- Name: player_reward; Type: TABLE; Schema: public; Owner: -
@@ -69,7 +87,7 @@ CREATE TABLE public.profile_entry (
     email character varying(255) NOT NULL,
     pseudonym character varying(100) NOT NULL,
     bio character varying(300),
-    country character varying(100),
+    country character varying(2),
     language character varying(5) DEFAULT 'fr'::character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -77,7 +95,8 @@ CREATE TABLE public.profile_entry (
     banner_url character varying(1024),
     equipped_title character varying(128),
     onboarding_completed_at timestamp without time zone,
-    interests character varying(255)
+    interests character varying(255),
+    auto_train_on_timeout boolean DEFAULT true NOT NULL
 );
 
 
@@ -120,7 +139,7 @@ COMMENT ON COLUMN public.profile_entry.bio IS 'Bio libre de l''utilisateur (max 
 -- Name: COLUMN profile_entry.country; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.profile_entry.country IS 'Pays de l''utilisateur (max 100 caracteres)';
+COMMENT ON COLUMN public.profile_entry.country IS 'Pays affiché sur le profil : code ISO 3166-1 alpha-2 ; NULL = non affiché';
 
 
 --
@@ -213,23 +232,6 @@ CREATE TABLE public.progression_awarded_game (
 
 
 --
--- Name: progression_badge; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.progression_badge (
-    user_id character varying(255) NOT NULL,
-    badge character varying(50) NOT NULL
-);
-
-
---
--- Name: TABLE progression_badge; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.progression_badge IS 'Badges debloques par joueur';
-
-
---
 -- Name: progression_entry; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -253,8 +255,7 @@ CREATE TABLE public.progression_entry (
     image_correct_total integer DEFAULT 0 NOT NULL,
     rating integer DEFAULT 200 NOT NULL,
     peak_rating integer DEFAULT 200 NOT NULL,
-    rated_games integer DEFAULT 0 NOT NULL,
-    provisional boolean DEFAULT true NOT NULL
+    rated_games integer DEFAULT 0 NOT NULL
 );
 
 
@@ -262,7 +263,7 @@ CREATE TABLE public.progression_entry (
 -- Name: TABLE progression_entry; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.progression_entry IS 'Progression globale par joueur (XP totale, niveau, titre)';
+COMMENT ON TABLE public.progression_entry IS 'Progression d''un joueur : XP par sujet, Elo, statistiques de duel et compteurs de badges (les badges eux-mêmes vivent dans badge_unlock)';
 
 
 --
@@ -358,6 +359,51 @@ COMMENT ON TABLE public.progression_topic_games IS 'Parties humaines jouees par 
 
 
 --
+-- Name: pseudonym_claim; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pseudonym_claim (
+    pseudonym_key character varying(100) NOT NULL,
+    user_id character varying(255) NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE pseudonym_claim; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.pseudonym_claim IS 'Réservation unique d''un pseudonyme (clé insensible à la casse)';
+
+
+--
+-- Name: title_unlock; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.title_unlock (
+    user_id character varying(255) NOT NULL,
+    topic_id character varying(255) NOT NULL,
+    tier character varying(16) NOT NULL,
+    unlocked_at timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE title_unlock; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.title_unlock IS 'Titres thématiques débloqués (palier de maîtrise par sujet), datés. Fer = première partie humaine terminée dans le sujet';
+
+
+--
+-- Name: badge_unlock badge_unlock_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.badge_unlock
+    ADD CONSTRAINT badge_unlock_pkey PRIMARY KEY (user_id, badge);
+
+
+--
 -- Name: player_reward player_reward_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -430,14 +476,6 @@ ALTER TABLE ONLY public.progression_awarded_game
 
 
 --
--- Name: progression_badge progression_badge_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.progression_badge
-    ADD CONSTRAINT progression_badge_pkey PRIMARY KEY (user_id, badge);
-
-
---
 -- Name: progression_entry progression_entry_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -459,6 +497,22 @@ ALTER TABLE ONLY public.progression_topic_entry
 
 ALTER TABLE ONLY public.progression_topic_games
     ADD CONSTRAINT progression_topic_games_pkey PRIMARY KEY (user_id, topic_id);
+
+
+--
+-- Name: pseudonym_claim pseudonym_claim_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pseudonym_claim
+    ADD CONSTRAINT pseudonym_claim_pkey PRIMARY KEY (pseudonym_key);
+
+
+--
+-- Name: title_unlock title_unlock_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.title_unlock
+    ADD CONSTRAINT title_unlock_pkey PRIMARY KEY (user_id, topic_id, tier);
 
 
 --
@@ -525,11 +579,17 @@ CREATE INDEX idx_progression_activity_day_game_user_date ON public.progression_a
 
 
 --
--- Name: progression_badge fk_progression_badge_user; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: idx_pseudonym_claim_user; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.progression_badge
-    ADD CONSTRAINT fk_progression_badge_user FOREIGN KEY (user_id) REFERENCES public.progression_entry(user_id) ON DELETE CASCADE;
+CREATE INDEX idx_pseudonym_claim_user ON public.pseudonym_claim USING btree (user_id);
+
+
+--
+-- Name: idx_title_unlock_user_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_title_unlock_user_date ON public.title_unlock USING btree (user_id, unlocked_at DESC);
 
 
 --

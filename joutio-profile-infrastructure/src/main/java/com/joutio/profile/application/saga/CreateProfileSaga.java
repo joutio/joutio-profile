@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * <p>Idempotente <b>sans lecture de projection</b> : la commande de création est idempotente dans
  * l'agrégat ({@code CREATE_IF_MISSING}, no-op si le profil existe déjà). La saga ne dépend donc
  * pas de l'état courant d'un read model (replay-safe) — voir
- * {@code best-practices/.backend/anti-patterns.md}.</p>
+ * {@code docs/backend/anti-patterns.md}.</p>
  */
 @Saga
 @ProcessingGroup("create-profile-saga")
