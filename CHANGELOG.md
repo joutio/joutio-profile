@@ -1,3 +1,9 @@
+## [4.0.2](https://github.com/joutio/joutio-profile/compare/v4.0.1...v4.0.2) (2026-11-17)
+
+### Bug Fixes
+
+* **profile:** deterministic initial pseudonym ([8fa1d69](https://github.com/joutio/joutio-profile/commit/8fa1d69ec949df6147798ff9d041dc3a9073a6b2))
+
 ## [4.0.1](https://github.com/joutio/joutio-profile/compare/v4.0.0...v4.0.1) (2026-11-16)
 
 ### Bug Fixes
