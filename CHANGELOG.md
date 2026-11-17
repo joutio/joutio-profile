@@ -1,3 +1,9 @@
+## [4.0.3](https://github.com/joutio/joutio-profile/compare/v4.0.2...v4.0.3) (2026-11-17)
+
+### Bug Fixes
+
+* **deps:** joutio-parent 1.1.0, unknown enum constants tolerated on the Axon transport ([a64adf0](https://github.com/joutio/joutio-profile/commit/a64adf003a5d281206c488cdc711ef453ac48873))
+
 ## [4.0.2](https://github.com/joutio/joutio-profile/compare/v4.0.1...v4.0.2) (2026-11-17)
 
 ### Bug Fixes
