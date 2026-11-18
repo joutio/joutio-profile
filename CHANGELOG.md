@@ -1,3 +1,9 @@
+## [4.0.7](https://github.com/joutio/joutio-profile/compare/v4.0.6...v4.0.7) (2026-11-18)
+
+### Bug Fixes
+
+* **deps:** joutio-parent 2.1.0, consistent command routing across replicas ([233486a](https://github.com/joutio/joutio-profile/commit/233486a99b35a75ffaa9766976ba2814f2327d1d))
+
 ## [4.0.6](https://github.com/joutio/joutio-profile/compare/v4.0.5...v4.0.6) (2026-11-18)
 
 ### Bug Fixes
