@@ -1,3 +1,10 @@
+## [4.0.6](https://github.com/joutio/joutio-profile/compare/v4.0.5...v4.0.6) (2026-11-18)
+
+### Bug Fixes
+
+* republish image, 4.0.5 release failed before the docker build ([3772487](https://github.com/joutio/joutio-profile/commit/3772487bad04a6355bb0987c6e649cf3a4c07c9e))
+* restore development version after the interrupted 4.0.5 release ([cfb2ed7](https://github.com/joutio/joutio-profile/commit/cfb2ed73f5998d2ffa777c1d402f3e5fdcf84528))
+
 ## [4.0.5](https://github.com/joutio/joutio-profile/compare/v4.0.4...v4.0.5) (2026-11-18)
 
 ### Bug Fixes
