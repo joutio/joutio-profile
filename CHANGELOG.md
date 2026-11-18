@@ -1,3 +1,9 @@
+## [4.0.5](https://github.com/joutio/joutio-profile/compare/v4.0.4...v4.0.5) (2026-11-18)
+
+### Bug Fixes
+
+* **deps:** joutio-parent 2.0.0, idle-friendly processors and bytea Axon schema ([06f2d37](https://github.com/joutio/joutio-profile/commit/06f2d37397d232237a8724623aeedeb0c1918f7f))
+
 ## [4.0.4](https://github.com/joutio/joutio-profile/compare/v4.0.3...v4.0.4) (2026-11-17)
 
 ### Bug Fixes
