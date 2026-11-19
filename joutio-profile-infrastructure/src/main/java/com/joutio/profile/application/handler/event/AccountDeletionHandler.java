@@ -37,7 +37,8 @@ public class AccountDeletionHandler {
         jdbcTemplate.update("DELETE FROM progression_awarded_game WHERE user_id = ?", userId);
         jdbcTemplate.update("DELETE FROM progression_topic_games WHERE user_id = ?", userId);
         jdbcTemplate.update("DELETE FROM progression_topic_entry WHERE user_id = ?", userId);
-        jdbcTemplate.update("DELETE FROM progression_badge WHERE user_id = ?", userId);
+        jdbcTemplate.update("DELETE FROM badge_unlock WHERE user_id = ?", userId);
+        jdbcTemplate.update("DELETE FROM title_unlock WHERE user_id = ?", userId);
         jdbcTemplate.update("DELETE FROM progression_entry WHERE user_id = ?", userId);
         jdbcTemplate.update("DELETE FROM player_reward WHERE user_id = ?", userId);
         jdbcTemplate.update("DELETE FROM presence_session WHERE user_id = ?", userId);
