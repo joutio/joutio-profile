@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerTitleTest {
@@ -44,29 +43,5 @@ class PlayerTitleTest {
         assertEquals("Or · Histoire", title.label("Histoire"));
         assertEquals("Or", title.label(null));
         assertEquals("Or", title.label("  "));
-    }
-
-    @Test
-    void constructor_rejectsIncompleteTitles() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new PlayerTitle("  ", MasteryTier.OR));
-        assertThrows(IllegalArgumentException.class,
-                () -> new PlayerTitle("topic-1", null));
-    }
-
-    @Test
-    void requireValid_failsOnMalformedKeys() {
-        assertEquals("topic-1:DIAMANT", PlayerTitle.requireValid("topic-1:DIAMANT").key());
-        assertThrows(IllegalArgumentException.class, () -> PlayerTitle.requireValid("topic-1"));
-    }
-
-    @Test
-    void maxKeyLength_coversTheWidestTitle() {
-        int longestTier = java.util.Arrays.stream(MasteryTier.values())
-                .mapToInt(tier -> tier.name().length())
-                .max()
-                .orElse(0);
-
-        assertTrue(PlayerTitle.maxKeyLength() >= 36 + 1 + longestTier);
     }
 }

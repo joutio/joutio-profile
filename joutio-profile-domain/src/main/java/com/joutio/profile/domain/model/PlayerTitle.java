@@ -11,20 +11,12 @@ import java.util.Optional;
  * langue du lecteur et l'ajout ultérieur d'un gentilé éditorial.</p>
  *
  * <p>L'appartenance du titre au joueur (palier réellement atteint dans ce sujet) est vérifiée par
- * l'appelant, qui prépare la commande (cf. `docs/backend/axon.md`).</p>
+ * l'appelant, qui prépare la commande (cf. `docs/backend/axon.md`). Une clé s'analyse par
+ * {@link #parse(String)}, seule source d'un titre valide.</p>
  */
 public record PlayerTitle(String topicId, MasteryTier tier) {
 
     private static final String SEPARATOR = ":";
-
-    public PlayerTitle {
-        if (topicId == null || topicId.isBlank()) {
-            throw new IllegalArgumentException("topicId is required");
-        }
-        if (tier == null) {
-            throw new IllegalArgumentException("tier is required");
-        }
-    }
 
     /** Clé persistée du titre ({@code topicId:TIER}). */
     public String key() {
@@ -66,10 +58,5 @@ public record PlayerTitle(String topicId, MasteryTier tier) {
 
         return MasteryTier.fromKey(key.substring(separator + 1))
                 .map(tier -> new PlayerTitle(topicId, tier));
-    }
-
-    /** Analyse une clé persistée en rejetant les clés absentes ou mal formées. */
-    public static PlayerTitle requireValid(String key) {
-        return parse(key).orElseThrow(() -> new IllegalArgumentException("invalid title key: " + key));
     }
 }
