@@ -1,3 +1,9 @@
+## [4.0.8](https://github.com/joutio/joutio-profile/compare/v4.0.7...v4.0.8) (2026-11-19)
+
+### Bug Fixes
+
+* **profile:** account deletion purges badge and title unlocks ([b0a7ff2](https://github.com/joutio/joutio-profile/commit/b0a7ff2fd9c8ec3365022ea7312b70a9aa590574))
+
 ## [4.0.7](https://github.com/joutio/joutio-profile/compare/v4.0.6...v4.0.7) (2026-11-18)
 
 ### Bug Fixes
