@@ -1,3 +1,9 @@
+## [4.1.0](https://github.com/joutio/joutio-profile/compare/v4.0.8...v4.1.0) (2026-11-19)
+
+### Features
+
+* **badges:** badge unlock carries the game that earned it ([09da5f6](https://github.com/joutio/joutio-profile/commit/09da5f6b096d5dc3aeec0751e10711882fe218c9))
+
 ## [4.0.8](https://github.com/joutio/joutio-profile/compare/v4.0.7...v4.0.8) (2026-11-19)
 
 ### Bug Fixes
