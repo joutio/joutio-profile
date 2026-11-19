@@ -59,12 +59,14 @@ public interface ProgressionEvent {
     }
 
     /**
-     * Badge débloqué.
+     * Badge débloqué. {@code gameId} : partie qui l'a débloqué, {@code null} hors duel (compteur
+     * d'abonnés ou de défis).
      */
     record BadgeEarnedEvent(
             String userId,
             Badge badge,
-            Instant earnedAt
+            Instant earnedAt,
+            String gameId
     ) implements ProgressionEvent {
     }
 

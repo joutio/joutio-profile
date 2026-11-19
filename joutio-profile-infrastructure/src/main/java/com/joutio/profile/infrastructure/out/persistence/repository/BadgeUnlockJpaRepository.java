@@ -16,14 +16,16 @@ public interface BadgeUnlockJpaRepository extends JpaRepository<BadgeUnlockEntit
     /** Insère le badge ou garde la date la plus ancienne (idempotent, rejouable). */
     @Modifying
     @Query(value = """
-            INSERT INTO badge_unlock (user_id, badge, earned_at)
-            VALUES (:userId, :badge, :earnedAt)
+            INSERT INTO badge_unlock (user_id, badge, earned_at, game_id)
+            VALUES (:userId, :badge, :earnedAt, :gameId)
             ON CONFLICT (user_id, badge)
-            DO UPDATE SET earned_at = LEAST(badge_unlock.earned_at, EXCLUDED.earned_at)
+            DO UPDATE SET earned_at = LEAST(badge_unlock.earned_at, EXCLUDED.earned_at),
+                          game_id = COALESCE(badge_unlock.game_id, EXCLUDED.game_id)
             """, nativeQuery = true)
     void upsert(@Param("userId") String userId,
                 @Param("badge") String badge,
-                @Param("earnedAt") Instant earnedAt);
+                @Param("earnedAt") Instant earnedAt,
+                @Param("gameId") String gameId);
 
     List<BadgeUnlockEntity> findByUserIdIn(Collection<String> userIds);
 }

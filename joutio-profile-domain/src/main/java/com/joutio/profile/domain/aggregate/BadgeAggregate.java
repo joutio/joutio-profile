@@ -117,7 +117,7 @@ public class BadgeAggregate {
 
         // Ordre stable (règles) : le flux d'événements reste déterministe au replay.
         for (Badge badge : BadgeRules.evaluate(facts, badges)) {
-            apply(new ProgressionEvent.BadgeEarnedEvent(command.userId(), badge, now));
+            apply(new ProgressionEvent.BadgeEarnedEvent(command.userId(), badge, now, command.gameId()));
         }
     }
 
@@ -153,7 +153,7 @@ public class BadgeAggregate {
         BadgeRules.CounterFacts facts =
                 new BadgeRules.CounterFacts(followersGained, challengesSent);
         for (Badge badge : BadgeRules.evaluateCounters(facts, badges)) {
-            apply(new ProgressionEvent.BadgeEarnedEvent(command.userId(), badge, now));
+            apply(new ProgressionEvent.BadgeEarnedEvent(command.userId(), badge, now, null));
         }
     }
 

@@ -6,6 +6,8 @@ import java.time.Instant;
 public record BadgeUnlock(
         String userId,
         Badge badge,
-        Instant earnedAt
+        Instant earnedAt,
+        /** Partie qui a débloqué le badge ; {@code null} hors duel. */
+        String gameId
 ) {
 }

@@ -73,7 +73,8 @@ change pas), par le propriétaire.
   - écriture idempotente qui garde la date la plus ancienne ;
   - titre Fer et `MASTER_FER` à la première partie humaine du sujet (même à 0 XP) ;
   - paliers suivants par `MasteryTierReachedEvent` ;
-  - badges par `BadgeEarnedEvent.earnedAt`.
+  - badges par `BadgeEarnedEvent.earnedAt`, avec la partie qui les a débloqués (`gameId`, `null` hors duel :
+    abonnés, défis) pour la séquence du résultat.
 - **Activité** (`ActivityRules`, partagé avec la famille Assiduité) : série courante et record,
   parties par jour.
 - **Requêtes** (`joutio-profile-domain`) :

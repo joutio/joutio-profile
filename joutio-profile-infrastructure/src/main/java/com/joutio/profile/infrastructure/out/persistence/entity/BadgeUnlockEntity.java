@@ -32,4 +32,8 @@ public class BadgeUnlockEntity {
 
     @Column(name = "earned_at", nullable = false)
     private Instant earnedAt;
+
+    /** Partie qui a débloqué le badge ; {@code null} hors duel. */
+    @Column(name = "game_id", length = 255)
+    private String gameId;
 }

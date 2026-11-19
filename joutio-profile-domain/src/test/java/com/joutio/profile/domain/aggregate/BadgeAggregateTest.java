@@ -35,6 +35,15 @@ class BadgeAggregateTest {
     }
 
     @Test
+    void duelBadge_carriesItsGameId() {
+        fixture.givenNoPriorActivity()
+                .when(duel("game-1", "topic-1", 40, 40, true, false, 2))
+                .expectEventsMatching(JoutioAxonMatchers.hasPayloadMatching(
+                        ProgressionEvent.BadgeEarnedEvent.class,
+                        e -> "game-1".equals(((ProgressionEvent.BadgeEarnedEvent) e).gameId())));
+    }
+
+    @Test
     void botGame_earnsNoBadgeAndMovesNoCounter() {
         // Entraînement contre bot : **seul** le fait de duel est tracé (idempotence du rejeu) —
         // aucune victoire, aucun exploit, aucun compteur n'est acquis.
@@ -212,6 +221,19 @@ class BadgeAggregateTest {
     }
 
     @Test
+    void counterBadge_hasNoGameId() {
+        fixture.given(new ProgressionEvent.BadgeCounterRecordedEvent(
+                        BADGE_ID, "user-1", BadgeMetric.CHALLENGES_SENT, "challenge-1",
+                        Instant.now()))
+                .when(new ProgressionCommand.RecordBadgeCounterCommand(
+                        BADGE_ID, "user-1", BadgeMetric.CHALLENGES_SENT, "challenge-2",
+                        Instant.now()))
+                .expectEventsMatching(JoutioAxonMatchers.hasPayloadMatching(
+                        ProgressionEvent.BadgeEarnedEvent.class,
+                        e -> ((ProgressionEvent.BadgeEarnedEvent) e).gameId() == null));
+    }
+
+    @Test
     void replayedCounterSource_isCountedOnce() {
         // Livraison au-moins-une-fois : le même défi rejoué ne fait pas avancer le compteur.
         fixture.given(new ProgressionEvent.BadgeCounterRecordedEvent(
@@ -263,7 +285,7 @@ class BadgeAggregateTest {
                         new ProgressionEvent.BadgeFactsRecordedEvent(
                                 BADGE_ID, "user-1", "game-1", "topic-1", 100, 100, true, false, 2,
                                 0, Instant.now(), null),
-                        new ProgressionEvent.BadgeEarnedEvent("user-1", Badge.FIRST_WIN, Instant.now()))
+                        new ProgressionEvent.BadgeEarnedEvent("user-1", Badge.FIRST_WIN, Instant.now(), "game-1"))
                 .when(duel("game-2", "topic-1", 30, 30, true, false, 2))
                 .expectEventsMatching(JoutioAxonMatchers.hasPayloadMatching(
                         ProgressionEvent.BadgeFactsRecordedEvent.class,
@@ -293,7 +315,7 @@ class BadgeAggregateTest {
         System.arraycopy(facts, 0, events, 0, facts.length);
         for (int index = 0; index < badges.length; index++) {
             events[facts.length + index] =
-                    new ProgressionEvent.BadgeEarnedEvent("user-1", badges[index], Instant.now());
+                    new ProgressionEvent.BadgeEarnedEvent("user-1", badges[index], Instant.now(), null);
         }
         return events;
     }

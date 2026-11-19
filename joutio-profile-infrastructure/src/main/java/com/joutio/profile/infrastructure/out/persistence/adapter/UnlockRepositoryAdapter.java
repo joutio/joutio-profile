@@ -50,7 +50,8 @@ public class UnlockRepositoryAdapter implements UnlockRepositoryPort {
 
     @Override
     public void saveBadge(BadgeUnlock unlock) {
-        badgeRepository.upsert(unlock.userId(), unlock.badge().name(), unlock.earnedAt());
+        badgeRepository.upsert(unlock.userId(), unlock.badge().name(), unlock.earnedAt(),
+                unlock.gameId());
     }
 
     @Override
@@ -102,6 +103,7 @@ public class UnlockRepositoryAdapter implements UnlockRepositoryPort {
     }
 
     private static BadgeUnlock toDomain(BadgeUnlockEntity entity) {
-        return new BadgeUnlock(entity.getUserId(), entity.getBadge(), entity.getEarnedAt());
+        return new BadgeUnlock(entity.getUserId(), entity.getBadge(), entity.getEarnedAt(),
+                entity.getGameId());
     }
 }

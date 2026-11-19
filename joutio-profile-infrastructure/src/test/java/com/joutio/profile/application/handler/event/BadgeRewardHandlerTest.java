@@ -23,7 +23,7 @@ class BadgeRewardHandlerTest {
     void assiduityBronzeGrantsMicahPermanently() {
         Instant at = Instant.parse("2026-10-23T10:00:00Z");
 
-        handler.on(new ProgressionEvent.BadgeEarnedEvent("user-1", Badge.ASSIDUITY_BRONZE, at));
+        handler.on(new ProgressionEvent.BadgeEarnedEvent("user-1", Badge.ASSIDUITY_BRONZE, at, "game-1"));
 
         verify(commandGateway).sendAndWait(new RewardCommand.GrantRewardCommand(
                 RewardRules.rewardIdFor("user-1"),

@@ -46,9 +46,9 @@ class UnlockProjectionTest {
 
     @Test
     void badgeEarned_isProjectedWithItsDate() {
-        projection.on(new ProgressionEvent.BadgeEarnedEvent("user-1", Badge.DUELIST_FER, AT));
+        projection.on(new ProgressionEvent.BadgeEarnedEvent("user-1", Badge.DUELIST_FER, AT, "game-1"));
 
-        verify(repository).saveBadge(new BadgeUnlock("user-1", Badge.DUELIST_FER, AT));
+        verify(repository).saveBadge(new BadgeUnlock("user-1", Badge.DUELIST_FER, AT, "game-1"));
     }
 
     @Test

@@ -50,7 +50,8 @@ public class UnlockProjection {
     @EventHandler
     @Transactional
     public void on(ProgressionEvent.BadgeEarnedEvent event) {
-        repositoryPort.saveBadge(new BadgeUnlock(event.userId(), event.badge(), event.earnedAt()));
+        repositoryPort.saveBadge(new BadgeUnlock(
+                event.userId(), event.badge(), event.earnedAt(), event.gameId()));
     }
 
     @ResetHandler
