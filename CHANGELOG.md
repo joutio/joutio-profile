@@ -1,3 +1,9 @@
+## [4.1.7](https://github.com/joutio/joutio-profile/compare/v4.1.6...v4.1.7) (2026-11-20)
+
+### Performance Improvements
+
+* **docker:** JDK 25 AOT cache at startup ([9ab2995](https://github.com/joutio/joutio-profile/commit/9ab2995c438b602880dec89b46fce2527ed8b886))
+
 ## [4.1.6](https://github.com/joutio/joutio-profile/compare/v4.1.5...v4.1.6) (2026-11-20)
 
 ### Bug Fixes
