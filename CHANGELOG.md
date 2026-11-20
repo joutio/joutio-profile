@@ -1,3 +1,9 @@
+## [4.1.8](https://github.com/joutio/joutio-profile/compare/v4.1.7...v4.1.8) (2026-11-20)
+
+### Bug Fixes
+
+* **deps:** joutio-parent 2.4.1 with patched dependencies ([2b757c5](https://github.com/joutio/joutio-profile/commit/2b757c5e89a135b6fd3b59e6a217355a828720b5))
+
 ## [4.1.7](https://github.com/joutio/joutio-profile/compare/v4.1.6...v4.1.7) (2026-11-20)
 
 ### Performance Improvements
