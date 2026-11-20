@@ -1,3 +1,9 @@
+## [4.1.5](https://github.com/joutio/joutio-profile/compare/v4.1.4...v4.1.5) (2026-11-20)
+
+### Bug Fixes
+
+* **docker:** rebuild on patched base images ([73b1e2a](https://github.com/joutio/joutio-profile/commit/73b1e2adcf38eaf71d3a2acdc58b14ccf268df60))
+
 ## [4.1.4](https://github.com/joutio/joutio-profile/compare/v4.1.3...v4.1.4) (2026-11-20)
 
 ### Bug Fixes
