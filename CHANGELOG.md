@@ -4,6 +4,12 @@
 
 * **deps:** pin published contract versions ([6eadc7c](https://github.com/joutio/joutio-profile/commit/6eadc7c78307f2737751c8915fd8ed5ced95a667))
 
+## [4.2.1](https://github.com/joutio/joutio-profile/compare/v4.2.0...v4.2.1) (2026-11-24)
+
+### Bug Fixes
+
+* **deps:** pin published contract versions ([6eadc7c](https://github.com/joutio/joutio-profile/commit/6eadc7c78307f2737751c8915fd8ed5ced95a667))
+
 ## [4.2.0](https://github.com/joutio/joutio-profile/compare/v4.1.8...v4.2.0) (2026-11-24)
 
 ### Features
