@@ -1,3 +1,9 @@
+## [4.2.0](https://github.com/joutio/joutio-profile/compare/v4.1.8...v4.2.0) (2026-11-24)
+
+### Features
+
+* credit the challenges badge from completed challenge rooms ([0585e78](https://github.com/joutio/joutio-profile/commit/0585e78a3eb7c48f3cc67575977455482de771f6))
+
 ## [4.1.8](https://github.com/joutio/joutio-profile/compare/v4.1.7...v4.1.8) (2026-11-20)
 
 ### Bug Fixes
