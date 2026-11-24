@@ -43,8 +43,8 @@ change pas), par le propriétaire.
 - **Compteurs hors duel** (au moins une fois, dédoublonnés par `sourceId`) →
   `RecordBadgeCounterCommand` :
   - `SocialBadgesSaga` sur `UserFollowedEvent` (social) ;
-  - `ChallengeBadgesSaga` sur `ChallengeStartedEvent` (matchmaking : un défi compte seulement s'il
-    a produit une partie).
+  - `ChallengeBadgesSaga` sur `RoomCompletedEvent` d'origine `CHALLENGE`/`REMATCH` (matchmaking : un défi
+    compte pour son initiateur seulement s'il a produit une partie, dédoublonné par `roomId`).
 - **Récompenses** : `ASSIDUITY_BRONZE` → `MICAH_AVATAR` (`RewardRules`, groupe `reward-grant`).
   `RewardRules.catalog()` liste aussi les récompenses verrouillées.
 - **Onboarding** : `CompleteOnboardingCommand` (idempotente). Une première partie humaine terminée

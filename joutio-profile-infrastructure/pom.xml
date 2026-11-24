@@ -13,6 +13,10 @@
 
     <artifactId>joutio-profile-infrastructure</artifactId>
 
+    <properties>
+        <joutio.matchmaking-domain.version>3.0.0</joutio.matchmaking-domain.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.joutio</groupId>
@@ -41,11 +45,16 @@
         <dependency>
             <groupId>com.joutio</groupId>
             <artifactId>joutio-matchmaking-domain</artifactId>
-            <version>1.0.0</version>
+            <version>${joutio.matchmaking-domain.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.joutio</groupId>
+            <artifactId>joutio-axon-test</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- Tests sur le vrai schéma du service (PostgreSQL) -->

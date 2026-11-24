@@ -1,6 +1,6 @@
 package com.joutio.profile.application.saga;
 
-import com.joutio.matchmaking.domain.event.ChallengeEvent;
+import com.joutio.matchmaking.domain.event.RoomEvent;
 import com.joutio.microservice.core.domain.constant.JoutioConstants;
 import com.joutio.profile.domain.command.ProgressionCommand;
 import com.joutio.profile.domain.model.BadgeMetric;
@@ -18,12 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Objects;
 
 /**
- * ChallengeBadgesSaga — crédite le badge **Défis** du joueur qui lance un défi nominatif.
+ * ChallengeBadgesSaga — crédite le badge **Défis** du joueur qui lance un défi ou une revanche.
  *
- * <p>Consomme {@link ChallengeEvent.ChallengeStartedEvent} (émis par {@code joutio-matchmaking},
- * propriétaire des défis) : un défi ne compte **que s'il a été accepté et a abouti sur une partie**
- * — la simple création (ou acceptation) du défi ne crédite rien. Saga **sans état** : elle se
- * termine aussitôt.</p>
+ * <p>Consomme {@link RoomEvent.RoomCompletedEvent} (émis par {@code joutio-matchmaking}) : un défi ne compte
+ * <b>que s'il a abouti sur une partie</b>, jamais à l'envoi ni à l'acceptation. Saga <b>sans état</b> : elle se termine
+ * aussitôt ; la salle sert de source idempotente du compteur.</p>
  */
 @Saga
 @ProcessingGroup("challenge-badges-saga")
@@ -35,23 +34,24 @@ public class ChallengeBadgesSaga {
     private transient CommandGateway commandGateway;
 
     @StartSaga
-    @SagaEventHandler(associationProperty = "challengerId")
-    public void on(ChallengeEvent.ChallengeStartedEvent event) {
-        if (event.challengerId() == null
-                || Objects.equals(JoutioConstants.SYSTEM_USER_ID, event.challengerId())) {
+    @SagaEventHandler(associationProperty = "roomId")
+    public void on(RoomEvent.RoomCompletedEvent event) {
+        if (event.origin() == null
+                || !event.origin().requiresAcceptance()
+                || event.initiatorId() == null
+                || Objects.equals(JoutioConstants.SYSTEM_USER_ID, event.initiatorId())) {
             SagaLifecycle.end();
             return;
         }
 
         commandGateway.send(new ProgressionCommand.RecordBadgeCounterCommand(
-                ProgressionRules.badgeIdFor(event.challengerId()),
-                event.challengerId(),
+                ProgressionRules.badgeIdFor(event.initiatorId()),
+                event.initiatorId(),
                 BadgeMetric.CHALLENGES_SENT,
-                event.challengeId(),
-                event.startedAt()
+                event.roomId(),
+                event.completedAt()
         ));
-        logger.debug("Badge défi crédité (défi abouti): userId={}, gameId={}",
-                event.challengerId(), event.gameId());
+        logger.debug("Badge défi crédité (défi abouti): userId={}, gameId={}", event.initiatorId(), event.gameId());
         SagaLifecycle.end();
     }
 }
