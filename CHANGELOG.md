@@ -1,3 +1,9 @@
+## [4.3.1](https://github.com/joutio/joutio-profile/compare/v4.3.0...v4.3.1) (2026-11-25)
+
+### Bug Fixes
+
+* **release:** republish after a GitHub Packages 500 ([74b36e3](https://github.com/joutio/joutio-profile/commit/74b36e3a9e1fd59001d3fd0e45f904159e4c0620))
+
 ## [4.3.0](https://github.com/joutio/joutio-profile/compare/v4.2.3...v4.3.0) (2026-11-25)
 
 ### Features
