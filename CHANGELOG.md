@@ -1,3 +1,9 @@
+## [4.3.0](https://github.com/joutio/joutio-profile/compare/v4.2.3...v4.3.0) (2026-11-25)
+
+### Features
+
+* **progression:** live game reward view ([d5f1b7c](https://github.com/joutio/joutio-profile/commit/d5f1b7c38bf26f20ccc9e9f95dcf248bebc10651))
+
 ## [4.2.3](https://github.com/joutio/joutio-profile/compare/v4.2.2...v4.2.3) (2026-11-25)
 
 ### Bug Fixes
