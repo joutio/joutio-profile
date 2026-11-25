@@ -32,9 +32,9 @@ import static org.mockito.Mockito.when;
 class GameRewardServiceTest {
 
     private static final Instant AT = Instant.parse("2026-11-25T10:00:00Z");
-    private static final AwardedGame ME = new AwardedGame("me", "game-1", "topic-1", 120, 100, false, 12, true);
+    private static final AwardedGame ME = new AwardedGame("me", "game-1", "topic-1", 120, 100, false, 1212, 12, true);
     private static final AwardedGame OPPONENT =
-            new AwardedGame("opponent", "game-1", "topic-1", 80, 80, false, -12, true);
+            new AwardedGame("opponent", "game-1", "topic-1", 80, 80, false, 988, -12, true);
 
     private final ProgressionAwardedGameRepositoryPort awardedGames = mock(ProgressionAwardedGameRepositoryPort.class);
     private final ProgressionRepositoryPort progressions = mock(ProgressionRepositoryPort.class);

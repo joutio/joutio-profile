@@ -89,7 +89,8 @@ change pas), par le propriétaire.
 ## Vue vivante : récompense d'un duel
 
 `GetGameRewardQuery(gameId, userId)` → `GameReward` vue par ce joueur (`null` s'il n'a pas été récompensé pour la
-partie, ou n'y a pas joué). `GameRewardService.changed(gameId)` s'appelle dans le handler qui vient d'écrire
+partie, ou n'y a pas joué). Les deux attributions (`AwardedGame`) portent l'Elo après la partie (`rating`, `null`
+pour une attribution antérieure à la V4) : la vue se suffit, sans l'instantané de game. `GameRewardService.changed(gameId)` s'appelle dans le handler qui vient d'écrire
 (`ProgressionProjection` sur `XpAwardedEvent`, `UnlockProjection` sur un `BadgeEarnedEvent` de duel) :
 - `version` = compteur de la partie (`game_reward_version`, upsert atomique), car la récompense mêle plusieurs
   agrégats (`progress:<userId>` des deux joueurs, `badges:<userId>`) ;

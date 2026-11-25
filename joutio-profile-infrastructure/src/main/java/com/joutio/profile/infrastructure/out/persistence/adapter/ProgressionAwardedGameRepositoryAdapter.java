@@ -28,7 +28,7 @@ public class ProgressionAwardedGameRepositoryAdapter implements ProgressionAward
             return false;
         }
         repository.save(new ProgressionAwardedGameEntity(awarded.userId(), awarded.gameId(), awarded.topicId(),
-                awarded.xp(), awarded.gameScore(), awarded.botGame(), awarded.ratingDelta(), awarded.rated()));
+                awarded.xp(), awarded.gameScore(), awarded.botGame(), awarded.rating(), awarded.ratingDelta(), awarded.rated()));
         return true;
     }
 
@@ -38,7 +38,7 @@ public class ProgressionAwardedGameRepositoryAdapter implements ProgressionAward
         return repository.findByGameId(gameId).stream()
                 .map(entity -> new AwardedGame(entity.getUserId(), entity.getGameId(), entity.getTopicId(),
                         entity.getXp() == null ? 0 : entity.getXp(), entity.getGameScore(), entity.isBotGame(),
-                        entity.getRatingDelta(), entity.isRated()))
+                        entity.getRating(), entity.getRatingDelta(), entity.isRated()))
                 .toList();
     }
 
