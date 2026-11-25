@@ -31,8 +31,18 @@ public class ProgressionAwardedGameEntity {
     @Column(name = "game_id", length = 255, nullable = false)
     private String gameId;
 
+    @Column(name = "topic_id", length = 255)
+    private String topicId;
+
     @Column(name = "xp")
     private Integer xp;
+
+    /** Score du joueur dans la partie. */
+    @Column(name = "game_score", nullable = false)
+    private int gameScore;
+
+    @Column(name = "bot_game", nullable = false)
+    private boolean botGame;
 
     /** Variation d'Elo du duel (0 si non classé). */
     @Column(name = "rating_delta", nullable = false)
@@ -42,11 +52,14 @@ public class ProgressionAwardedGameEntity {
     @Column(name = "rated", nullable = false)
     private boolean rated;
 
-    public ProgressionAwardedGameEntity(String userId, String gameId, Integer xp,
-                                        int ratingDelta, boolean rated) {
+    public ProgressionAwardedGameEntity(String userId, String gameId, String topicId, Integer xp, int gameScore,
+                                        boolean botGame, int ratingDelta, boolean rated) {
         this.userId = userId;
         this.gameId = gameId;
+        this.topicId = topicId;
         this.xp = xp;
+        this.gameScore = gameScore;
+        this.botGame = botGame;
         this.ratingDelta = ratingDelta;
         this.rated = rated;
     }

@@ -1,5 +1,6 @@
 package com.joutio.profile.application.projection;
 
+import com.joutio.profile.application.service.GameRewardService;
 import com.joutio.profile.domain.event.ProgressionEvent;
 import com.joutio.profile.domain.model.Badge;
 import com.joutio.profile.domain.model.BadgeUnlock;
@@ -20,7 +21,8 @@ class UnlockProjectionTest {
     private static final Instant AT = Instant.parse("2026-11-15T10:00:00Z");
 
     private final UnlockRepositoryPort repository = mock(UnlockRepositoryPort.class);
-    private final UnlockProjection projection = new UnlockProjection(repository);
+    private final GameRewardService gameRewards = mock(GameRewardService.class);
+    private final UnlockProjection projection = new UnlockProjection(repository, gameRewards);
 
     @Test
     void humanGame_unlocksIronTitleOfTheTopic_evenWithZeroXp() {
@@ -49,6 +51,14 @@ class UnlockProjectionTest {
         projection.on(new ProgressionEvent.BadgeEarnedEvent("user-1", Badge.DUELIST_FER, AT, "game-1"));
 
         verify(repository).saveBadge(new BadgeUnlock("user-1", Badge.DUELIST_FER, AT, "game-1"));
+        verify(gameRewards).changed("game-1");
+    }
+
+    @Test
+    void badgeEarnedOutsideAGame_changesNoGameReward() {
+        projection.on(new ProgressionEvent.BadgeEarnedEvent("user-1", Badge.DUELIST_FER, AT, null));
+
+        verify(gameRewards, never()).changed(any());
     }
 
     @Test

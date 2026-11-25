@@ -1,5 +1,6 @@
 package com.joutio.profile.application.projection;
 
+import com.joutio.profile.application.service.GameRewardService;
 import com.joutio.profile.domain.event.ProgressionEvent;
 import com.joutio.profile.domain.model.BadgeUnlock;
 import com.joutio.profile.domain.model.MasteryTier;
@@ -23,9 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UnlockProjection {
 
     private final UnlockRepositoryPort repositoryPort;
+    private final GameRewardService gameRewards;
 
-    public UnlockProjection(UnlockRepositoryPort repositoryPort) {
+    public UnlockProjection(UnlockRepositoryPort repositoryPort, GameRewardService gameRewards) {
         this.repositoryPort = repositoryPort;
+        this.gameRewards = gameRewards;
     }
 
     /** Titre Fer : première partie humaine terminée dans le sujet (abandon compris, bot exclu). */
@@ -52,6 +55,9 @@ public class UnlockProjection {
     public void on(ProgressionEvent.BadgeEarnedEvent event) {
         repositoryPort.saveBadge(new BadgeUnlock(
                 event.userId(), event.badge(), event.earnedAt(), event.gameId()));
+        if (event.gameId() != null) {
+            gameRewards.changed(event.gameId());
+        }
     }
 
     @ResetHandler

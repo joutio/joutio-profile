@@ -82,9 +82,20 @@ change pas), par le propriétaire.
     `GetProfileSuggestionsQuery`, `CountImageReferencesQuery`, `ProfileSearchQuery` ;
   - `ProgressionQuery` : `GetProgressionQuery`, `GetProgressionsByIdsQuery`,
     `GetTopicProgressionQuery`, `GetTopicProgressionsQuery`, `GetActivityQuery`, `GetUnlocksQuery`,
-    `GetUnlocksByIdsQuery`, `GetGamesXpQuery` ;
+    `GetUnlocksByIdsQuery`, `GetGamesXpQuery`, `GetGameRewardQuery` (vue vivante, ci-dessous) ;
   - `PresenceQuery.GetPresencesByIdsQuery` ;
   - `RewardQuery.GetPlayerRewardsQuery`.
+
+## Vue vivante : récompense d'un duel
+
+`GetGameRewardQuery(gameId, userId)` → `GameReward` vue par ce joueur (`null` s'il n'a pas été récompensé pour la
+partie, ou n'y a pas joué). `GameRewardService.changed(gameId)` s'appelle dans le handler qui vient d'écrire
+(`ProgressionProjection` sur `XpAwardedEvent`, `UnlockProjection` sur un `BadgeEarnedEvent` de duel) :
+- `version` = compteur de la partie (`game_reward_version`, upsert atomique), car la récompense mêle plusieurs
+  agrégats (`progress:<userId>` des deux joueurs, `badges:<userId>`) ;
+- émission au commit, à chaque joueur récompensé de la partie, filtrée sur `gameId` **et** `userId` : un abonné qui
+  n'y a pas joué ne reçoit rien ;
+- toute nouvelle écriture qui change la récompense appelle `changed`, sinon l'écran reste sur l'ancienne valeur.
 
 ## Contrats consommés
 

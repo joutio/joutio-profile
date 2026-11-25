@@ -1,5 +1,6 @@
 package com.joutio.profile.domain.port.out;
 
+import com.joutio.profile.domain.model.AwardedGame;
 import com.joutio.profile.domain.model.GameXp;
 
 import java.util.List;
@@ -17,7 +18,10 @@ public interface ProgressionAwardedGameRepositoryPort {
      *
      * @return {@code true} si c'est une nouvelle attribution (à appliquer), {@code false} sinon.
      */
-    boolean record(String userId, String gameId, int xp, int ratingDelta, boolean rated);
+    boolean record(AwardedGame awarded);
+
+    /** Attributions d'une partie, une par joueur humain déjà récompensé. */
+    List<AwardedGame> findByGame(String gameId);
 
     /**
      * XP attribuée pour une liste de parties (les parties inconnues sont absentes du résultat).

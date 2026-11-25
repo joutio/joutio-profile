@@ -1,5 +1,7 @@
 package com.joutio.profile.application.projection;
 
+import com.joutio.profile.application.service.GameRewardService;
+import com.joutio.profile.domain.model.AwardedGame;
 import com.joutio.profile.domain.event.ProgressionEvent;
 import com.joutio.profile.domain.model.ActivityRules;
 import com.joutio.profile.domain.model.PlayerActivity;
@@ -34,12 +36,15 @@ public class ProgressionProjection {
     private final ProgressionRepositoryPort progressionRepositoryPort;
     private final ProgressionAwardedGameRepositoryPort awardedGameRepositoryPort;
     private final ZoneId activityZone;
+    private final GameRewardService gameRewards;
 
     public ProgressionProjection(ProgressionRepositoryPort progressionRepositoryPort,
                                  ProgressionAwardedGameRepositoryPort awardedGameRepositoryPort,
-                                 AppProperties properties) {
+                                 AppProperties properties,
+                                 GameRewardService gameRewards) {
         this.progressionRepositoryPort = progressionRepositoryPort;
         this.awardedGameRepositoryPort = awardedGameRepositoryPort;
+        this.gameRewards = gameRewards;
         this.activityZone = ZoneId.of(properties.activity().zone());
     }
 
@@ -55,8 +60,8 @@ public class ProgressionProjection {
         }
 
         // Idempotence par clé métier (userId, gameId) : un rejeu ne recompte pas l'XP.
-        if (!awardedGameRepositoryPort.record(event.userId(), event.gameId(), event.xp(),
-                event.ratingDelta(), event.ratedOpponentId() != null)) {
+        if (!awardedGameRepositoryPort.record(new AwardedGame(event.userId(), event.gameId(), event.topicId(),
+                event.xp(), event.gameScore(), event.botGame(), event.ratingDelta(), event.ratedOpponentId() != null))) {
             return;
         }
 
@@ -128,6 +133,8 @@ public class ProgressionProjection {
                 .peakRating(event.peakRating())
                 .ratedGames(event.ratedGames())
                 .build());
+
+        gameRewards.changed(event.gameId());
 
         logger.info("Progression projetée: userId={}, sujet={}, +{} XP, Elo={} (+{})",
                 event.userId(), event.topicId(), event.xp(), event.rating(), event.ratingDelta());

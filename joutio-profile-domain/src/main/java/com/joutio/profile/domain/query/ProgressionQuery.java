@@ -30,6 +30,14 @@ public interface ProgressionQuery {
     }
 
     /**
+     * Récompense d'un duel vue par l'un de ses joueurs → {@code GameReward}, {@code null} si ce joueur n'a pas (encore)
+     * été récompensé pour cette partie, ou n'y a pas joué. <b>Vue vivante</b> : chaque écriture qui la change est
+     * émise aux abonnés de même {@code gameId} et {@code userId}.
+     */
+    record GetGameRewardQuery(String gameId, String userId) implements ProgressionQuery {
+    }
+
+    /**
      * Déblocages datés d'un joueur (titres thématiques et badges) → {@code PlayerUnlocks}.
      */
     record GetUnlocksQuery(String userId) implements ProgressionQuery {

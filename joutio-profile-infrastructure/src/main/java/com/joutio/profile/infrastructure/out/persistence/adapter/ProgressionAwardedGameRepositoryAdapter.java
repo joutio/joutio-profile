@@ -1,5 +1,6 @@
 package com.joutio.profile.infrastructure.out.persistence.adapter;
 
+import com.joutio.profile.domain.model.AwardedGame;
 import com.joutio.profile.domain.model.GameXp;
 import com.joutio.profile.domain.port.out.ProgressionAwardedGameRepositoryPort;
 import com.joutio.profile.infrastructure.out.persistence.entity.ProgressionAwardedGameEntity;
@@ -20,14 +21,25 @@ public class ProgressionAwardedGameRepositoryAdapter implements ProgressionAward
 
     @Override
     @Transactional
-    public boolean record(String userId, String gameId, int xp, int ratingDelta, boolean rated) {
+    public boolean record(AwardedGame awarded) {
         ProgressionAwardedGameEntity.AwardedGameId id =
-                new ProgressionAwardedGameEntity.AwardedGameId(userId, gameId);
+                new ProgressionAwardedGameEntity.AwardedGameId(awarded.userId(), awarded.gameId());
         if (repository.existsById(id)) {
             return false;
         }
-        repository.save(new ProgressionAwardedGameEntity(userId, gameId, xp, ratingDelta, rated));
+        repository.save(new ProgressionAwardedGameEntity(awarded.userId(), awarded.gameId(), awarded.topicId(),
+                awarded.xp(), awarded.gameScore(), awarded.botGame(), awarded.ratingDelta(), awarded.rated()));
         return true;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AwardedGame> findByGame(String gameId) {
+        return repository.findByGameId(gameId).stream()
+                .map(entity -> new AwardedGame(entity.getUserId(), entity.getGameId(), entity.getTopicId(),
+                        entity.getXp() == null ? 0 : entity.getXp(), entity.getGameScore(), entity.isBotGame(),
+                        entity.getRatingDelta(), entity.isRated()))
+                .toList();
     }
 
     @Override

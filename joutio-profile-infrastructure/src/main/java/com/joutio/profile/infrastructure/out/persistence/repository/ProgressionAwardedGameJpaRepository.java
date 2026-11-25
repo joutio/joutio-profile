@@ -10,4 +10,6 @@ public interface ProgressionAwardedGameJpaRepository
         extends JpaRepository<ProgressionAwardedGameEntity, ProgressionAwardedGameEntity.AwardedGameId> {
 
     List<ProgressionAwardedGameEntity> findByUserIdAndGameIdIn(String userId, Collection<String> gameIds);
+
+    List<ProgressionAwardedGameEntity> findByGameId(String gameId);
 }
