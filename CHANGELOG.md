@@ -1,3 +1,9 @@
+## [4.4.0](https://github.com/joutio/joutio-profile/compare/v4.3.1...v4.4.0) (2026-11-25)
+
+### Features
+
+* **progression:** rating after the game in the live game reward ([2d25caf](https://github.com/joutio/joutio-profile/commit/2d25cafac7f77df7fd981020d79da9c09d296623))
+
 ## [4.3.1](https://github.com/joutio/joutio-profile/compare/v4.3.0...v4.3.1) (2026-11-25)
 
 ### Bug Fixes
