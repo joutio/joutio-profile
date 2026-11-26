@@ -1,3 +1,9 @@
+## [4.5.0](https://github.com/joutio/joutio-profile/compare/v4.4.0...v4.5.0) (2026-11-26)
+
+### Features
+
+* **live:** watch query feeding the BFF caches ([5681a4e](https://github.com/joutio/joutio-profile/commit/5681a4ec06be77ac55a6142257484db8963430b2))
+
 ## [4.4.0](https://github.com/joutio/joutio-profile/compare/v4.3.1...v4.4.0) (2026-11-25)
 
 ### Features
