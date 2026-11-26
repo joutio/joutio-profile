@@ -1,5 +1,10 @@
 package com.joutio.profile.application.handler.query;
 
+import org.axonframework.queryhandling.QueryUpdateEmitter;
+import com.joutio.profile.domain.port.out.LiveVersionPort;
+import com.joutio.profile.domain.port.out.PlayerRewardRepositoryPort;
+import com.joutio.profile.domain.port.out.ProfileRepositoryPort;
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.profile.domain.model.Badge;
 import com.joutio.profile.domain.model.GameXp;
 import com.joutio.profile.domain.model.MasteryTier;
@@ -29,7 +34,10 @@ class ProgressionQueryHandlerTest {
             mock(ProgressionAwardedGameRepositoryPort.class);
     private final UnlockRepositoryPort unlockRepository = mock(UnlockRepositoryPort.class);
     private final ProgressionQueryHandler handler =
-            new ProgressionQueryHandler(progressionRepository, awardedGameRepository, unlockRepository);
+            new ProgressionQueryHandler(progressionRepository, awardedGameRepository, unlockRepository,
+                    new PlayerLiveViews(mock(ProfileRepositoryPort.class), progressionRepository, unlockRepository,
+                            mock(PlayerRewardRepositoryPort.class), mock(LiveVersionPort.class),
+                            mock(QueryUpdateEmitter.class)));
 
     @Test
     void games_xp_delegates_to_awarded_journal() {

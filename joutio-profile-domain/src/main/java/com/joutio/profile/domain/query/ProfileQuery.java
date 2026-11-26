@@ -37,4 +37,11 @@ public interface ProfileQuery {
     /** Disponibilité d'un pseudonyme en saisie ; {@code userId} = joueur qui vérifie (son pseudo est « disponible »). */
     record CheckPseudonymAvailabilityQuery(String pseudonym, String userId) implements ProfileQuery {
     }
+
+    /**
+     * Surveillance de tous les profils, pour les caches du BFF : aucun résultat initial (liste vide), puis un
+     * {@code ProfileUpdate} à chaque écriture d'un profil. Les lectures passent par {@link GetProfileQuery}.
+     */
+    record WatchProfilesQuery() implements ProfileQuery {
+    }
 }

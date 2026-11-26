@@ -1,5 +1,6 @@
 package com.joutio.profile.application.projection;
 
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.profile.domain.event.ProfileEvent;
 import com.joutio.profile.domain.model.CountryCodes;
 import com.joutio.profile.domain.model.Profile;
@@ -28,9 +29,11 @@ public class ProfileProjection {
     private static final Logger logger = LoggerFactory.getLogger(ProfileProjection.class);
 
     private final ProfileRepositoryPort profileRepositoryPort;
+    private final PlayerLiveViews liveViews;
 
-    public ProfileProjection(ProfileRepositoryPort profileRepositoryPort) {
+    public ProfileProjection(ProfileRepositoryPort profileRepositoryPort, PlayerLiveViews liveViews) {
         this.profileRepositoryPort = profileRepositoryPort;
+        this.liveViews = liveViews;
     }
 
     /**
@@ -49,6 +52,7 @@ public class ProfileProjection {
                 .build();
 
         profileRepositoryPort.save(profile);
+        liveViews.profileChanged(event.userId());
 
         logger.info("Profile projected: userId={}", event.userId());
     }
@@ -132,5 +136,6 @@ public class ProfileProjection {
                                 .updatedAt(updatedAt)
                                 .build()
                 ));
+        liveViews.profileChanged(userId);
     }
 }

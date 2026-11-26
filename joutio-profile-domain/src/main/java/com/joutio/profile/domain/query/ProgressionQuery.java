@@ -49,4 +49,11 @@ public interface ProgressionQuery {
      */
     record GetUnlocksByIdsQuery(List<String> userIds) implements ProgressionQuery {
     }
+
+    /**
+     * Surveillance de la progression de tous les joueurs, pour les caches du BFF : aucun résultat initial (liste
+     * vide), puis un {@code PlayerProgressUpdate} à chaque écriture de la progression ou d'un badge.
+     */
+    record WatchProgressionsQuery() implements ProgressionQuery {
+    }
 }

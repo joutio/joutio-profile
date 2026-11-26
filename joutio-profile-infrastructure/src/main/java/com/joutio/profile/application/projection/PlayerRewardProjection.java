@@ -1,5 +1,6 @@
 package com.joutio.profile.application.projection;
 
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.profile.domain.event.RewardEvent;
 import com.joutio.profile.domain.port.out.PlayerRewardRepositoryPort;
 import org.axonframework.config.ProcessingGroup;
@@ -13,14 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlayerRewardProjection {
 
     private final PlayerRewardRepositoryPort repositoryPort;
+    private final PlayerLiveViews liveViews;
 
-    public PlayerRewardProjection(PlayerRewardRepositoryPort repositoryPort) {
+    public PlayerRewardProjection(PlayerRewardRepositoryPort repositoryPort, PlayerLiveViews liveViews) {
         this.repositoryPort = repositoryPort;
+        this.liveViews = liveViews;
     }
 
     @EventHandler
     @Transactional
     public void on(RewardEvent.RewardGrantedEvent event) {
         repositoryPort.grant(event.userId(), event.rewardCode(), event.source(), event.unlockedAt());
+        liveViews.rewardsChanged(event.userId());
     }
 }

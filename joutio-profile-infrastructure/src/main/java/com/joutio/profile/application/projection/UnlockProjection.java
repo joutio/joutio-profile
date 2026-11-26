@@ -1,5 +1,6 @@
 package com.joutio.profile.application.projection;
 
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.profile.application.service.GameRewardService;
 import com.joutio.profile.domain.event.ProgressionEvent;
 import com.joutio.profile.domain.model.BadgeUnlock;
@@ -25,10 +26,13 @@ public class UnlockProjection {
 
     private final UnlockRepositoryPort repositoryPort;
     private final GameRewardService gameRewards;
+    private final PlayerLiveViews liveViews;
 
-    public UnlockProjection(UnlockRepositoryPort repositoryPort, GameRewardService gameRewards) {
+    public UnlockProjection(UnlockRepositoryPort repositoryPort, GameRewardService gameRewards,
+                            PlayerLiveViews liveViews) {
         this.repositoryPort = repositoryPort;
         this.gameRewards = gameRewards;
+        this.liveViews = liveViews;
     }
 
     /** Titre Fer : première partie humaine terminée dans le sujet (abandon compris, bot exclu). */
@@ -58,6 +62,7 @@ public class UnlockProjection {
         if (event.gameId() != null) {
             gameRewards.changed(event.gameId());
         }
+        liveViews.progressionChanged(event.userId());
     }
 
     @ResetHandler

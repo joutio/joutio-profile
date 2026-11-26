@@ -7,6 +7,7 @@ import com.joutio.microservice.core.infrastructure.in.api.response.SearchRespons
 import com.joutio.profile.domain.exception.ProfileProblems;
 import com.joutio.profile.domain.model.ImageReferenceCount;
 import com.joutio.profile.domain.model.Profile;
+import com.joutio.profile.domain.model.ProfileUpdate;
 import com.joutio.profile.domain.port.out.ProfileRepositoryPort;
 import com.joutio.profile.domain.query.ProfileQuery;
 import org.axonframework.queryhandling.QueryHandler;
@@ -39,6 +40,12 @@ public class ProfileQueryHandler {
         }
         return new PseudonymAvailability(pseudonym, true,
                 pseudonymClaimPort.available(ProfileRules.pseudonymKey(pseudonym), query.userId()));
+    }
+
+    /** Surveillance pour les caches du BFF : aucun résultat initial, les updates viennent de {@code PlayerLiveViews}. */
+    @QueryHandler
+    public List<ProfileUpdate> handle(ProfileQuery.WatchProfilesQuery query) {
+        return List.of();
     }
 
     @QueryHandler

@@ -1,5 +1,6 @@
 package com.joutio.profile.application.handler.event;
 
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.axon.autoconfigure.erasure.AxonEventStoreErasureService;
 import com.joutio.identity.domain.event.UserEvent.UserAccountDeletedEvent;
 import org.flywaydb.core.Flyway;
@@ -61,7 +62,7 @@ class AccountDeletionHandlerTest {
                 VALUES ('u1', 'u1@example.com', 'Nadia', now(), now())""");
         jdbc.update("INSERT INTO badge_unlock (user_id, badge, earned_at) VALUES ('u1', 'FIRST_WIN', now())");
 
-        new AccountDeletionHandler(recording, erasure).on(new UserAccountDeletedEvent("u1", "d1", Instant.now()));
+        new AccountDeletionHandler(recording, erasure, mock(PlayerLiveViews.class)).on(new UserAccountDeletedEvent("u1", "d1", Instant.now()));
 
         List<String> userTables = jdbc.queryForList("""
                 SELECT table_name FROM information_schema.columns

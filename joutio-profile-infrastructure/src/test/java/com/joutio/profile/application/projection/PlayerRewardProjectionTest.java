@@ -1,5 +1,6 @@
 package com.joutio.profile.application.projection;
 
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.profile.domain.event.RewardEvent;
 import com.joutio.profile.domain.model.RewardCode;
 import com.joutio.profile.domain.model.RewardSource;
@@ -14,7 +15,8 @@ import static org.mockito.Mockito.verify;
 class PlayerRewardProjectionTest {
 
     private final PlayerRewardRepositoryPort repository = mock(PlayerRewardRepositoryPort.class);
-    private final PlayerRewardProjection projection = new PlayerRewardProjection(repository);
+    private final PlayerLiveViews liveViews = mock(PlayerLiveViews.class);
+    private final PlayerRewardProjection projection = new PlayerRewardProjection(repository, liveViews);
 
     @Test
     void rewardGranted_isProjectedIdempotently() {

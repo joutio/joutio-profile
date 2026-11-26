@@ -1,5 +1,6 @@
 package com.joutio.profile.application.projection;
 
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.profile.application.service.GameRewardService;
 import com.joutio.profile.domain.model.AwardedGame;
 import com.joutio.profile.domain.event.ProgressionEvent;
@@ -37,11 +38,14 @@ public class ProgressionProjection {
     private final ProgressionAwardedGameRepositoryPort awardedGameRepositoryPort;
     private final ZoneId activityZone;
     private final GameRewardService gameRewards;
+    private final PlayerLiveViews liveViews;
 
     public ProgressionProjection(ProgressionRepositoryPort progressionRepositoryPort,
                                  ProgressionAwardedGameRepositoryPort awardedGameRepositoryPort,
                                  AppProperties properties,
-                                 GameRewardService gameRewards) {
+                                 GameRewardService gameRewards,
+                                 PlayerLiveViews liveViews) {
+        this.liveViews = liveViews;
         this.progressionRepositoryPort = progressionRepositoryPort;
         this.awardedGameRepositoryPort = awardedGameRepositoryPort;
         this.gameRewards = gameRewards;
@@ -136,6 +140,7 @@ public class ProgressionProjection {
                 .build());
 
         gameRewards.changed(event.gameId());
+        liveViews.progressionChanged(event.userId());
 
         logger.info("Progression projetée: userId={}, sujet={}, +{} XP, Elo={} (+{})",
                 event.userId(), event.topicId(), event.xp(), event.rating(), event.ratingDelta());
@@ -167,6 +172,7 @@ public class ProgressionProjection {
         }
 
         progressionRepositoryPort.save(updated);
+        liveViews.progressionChanged(event.userId());
         logger.debug("Compteur de badge projeté: userId={}, métrique={}",
                 event.userId(), event.metric());
     }

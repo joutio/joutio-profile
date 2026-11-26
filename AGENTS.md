@@ -84,7 +84,10 @@ change pas), par le propriétaire.
     `GetTopicProgressionQuery`, `GetTopicProgressionsQuery`, `GetActivityQuery`, `GetUnlocksQuery`,
     `GetUnlocksByIdsQuery`, `GetGamesXpQuery`, `GetGameRewardQuery` (vue vivante, ci-dessous) ;
   - `PresenceQuery.GetPresencesByIdsQuery` ;
-  - `RewardQuery.GetPlayerRewardsQuery`.
+  - `RewardQuery.GetPlayerRewardsQuery` ;
+  - surveillance pour les caches du BFF : `WatchProfilesQuery`, `WatchProgressionsQuery`, `WatchPlayerRewardsQuery`
+    ([axon](../../docs/backend/axon.md#vues-surveillées-caches-du-bff)), émises par `PlayerLiveViews` (version
+    `live_version`, V5) depuis chaque handler qui écrit le profil, la progression, un badge ou une récompense.
 
 ## Vue vivante : récompense d'un duel
 

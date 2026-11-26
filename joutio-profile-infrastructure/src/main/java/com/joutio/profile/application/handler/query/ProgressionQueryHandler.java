@@ -1,8 +1,9 @@
 package com.joutio.profile.application.handler.query;
 
 import com.joutio.profile.domain.model.GameXp;
-import com.joutio.profile.domain.model.Badge;
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.profile.domain.model.PlayerProgress;
+import com.joutio.profile.domain.model.PlayerProgressUpdate;
 import com.joutio.profile.domain.model.PlayerUnlocks;
 import com.joutio.profile.domain.model.TopicProgress;
 import com.joutio.profile.domain.port.out.ProgressionAwardedGameRepositoryPort;
@@ -15,10 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Handler Axon — queries de progression. Retourne une progression neutre
@@ -33,13 +31,16 @@ public class ProgressionQueryHandler {
     private final ProgressionRepositoryPort progressionRepositoryPort;
     private final ProgressionAwardedGameRepositoryPort awardedGameRepositoryPort;
     private final UnlockRepositoryPort unlockRepositoryPort;
+    private final PlayerLiveViews liveViews;
 
     public ProgressionQueryHandler(ProgressionRepositoryPort progressionRepositoryPort,
                                    ProgressionAwardedGameRepositoryPort awardedGameRepositoryPort,
-                                   UnlockRepositoryPort unlockRepositoryPort) {
+                                   UnlockRepositoryPort unlockRepositoryPort,
+                                   PlayerLiveViews liveViews) {
         this.progressionRepositoryPort = progressionRepositoryPort;
         this.awardedGameRepositoryPort = awardedGameRepositoryPort;
         this.unlockRepositoryPort = unlockRepositoryPort;
+        this.liveViews = liveViews;
     }
 
     @QueryHandler
@@ -50,14 +51,13 @@ public class ProgressionQueryHandler {
 
     @QueryHandler
     public List<PlayerProgress> handle(ProgressionQuery.GetProgressionsByIdsQuery query) {
-        Map<String, PlayerProgress> byId = progressionRepositoryPort.findByIds(query.userIds()).stream()
-                .collect(Collectors.toMap(PlayerProgress::userId, Function.identity(), (a, _) -> a));
-        Map<String, Set<Badge>> badges = unlockRepositoryPort.findBadgesByUserIds(query.userIds());
-        return query.userIds().stream()
-                .map(userId -> byId.getOrDefault(userId, PlayerProgress.empty(userId)).toBuilder()
-                        .badges(badges.getOrDefault(userId, Set.of()))
-                        .build())
-                .toList();
+        return liveViews.progressions(query.userIds());
+    }
+
+    /** Surveillance pour les caches du BFF : aucun résultat initial, les updates viennent de {@link PlayerLiveViews}. */
+    @QueryHandler
+    public List<PlayerProgressUpdate> handle(ProgressionQuery.WatchProgressionsQuery query) {
+        return List.of();
     }
 
     @QueryHandler

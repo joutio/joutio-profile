@@ -1,5 +1,6 @@
 package com.joutio.profile.application.projection;
 
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.profile.application.service.GameRewardService;
 import com.joutio.profile.domain.event.ProgressionEvent;
 import com.joutio.profile.domain.model.Badge;
@@ -22,7 +23,8 @@ class UnlockProjectionTest {
 
     private final UnlockRepositoryPort repository = mock(UnlockRepositoryPort.class);
     private final GameRewardService gameRewards = mock(GameRewardService.class);
-    private final UnlockProjection projection = new UnlockProjection(repository, gameRewards);
+    private final PlayerLiveViews liveViews = mock(PlayerLiveViews.class);
+    private final UnlockProjection projection = new UnlockProjection(repository, gameRewards, liveViews);
 
     @Test
     void humanGame_unlocksIronTitleOfTheTopic_evenWithZeroXp() {

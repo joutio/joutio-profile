@@ -1,5 +1,11 @@
 package com.joutio.profile.application.handler.query;
 
+import org.axonframework.queryhandling.QueryUpdateEmitter;
+import com.joutio.profile.domain.port.out.LiveVersionPort;
+import com.joutio.profile.domain.port.out.UnlockRepositoryPort;
+import com.joutio.profile.domain.port.out.ProgressionRepositoryPort;
+import com.joutio.profile.domain.port.out.ProfileRepositoryPort;
+import com.joutio.profile.application.service.PlayerLiveViews;
 import com.joutio.profile.domain.model.PlayerRewards;
 import com.joutio.profile.domain.model.RewardCode;
 import com.joutio.profile.domain.model.RewardGrant;
@@ -18,7 +24,9 @@ import static org.mockito.Mockito.when;
 class RewardQueryHandlerTest {
 
     private final PlayerRewardRepositoryPort repository = mock(PlayerRewardRepositoryPort.class);
-    private final RewardQueryHandler handler = new RewardQueryHandler(repository);
+    private final RewardQueryHandler handler = new RewardQueryHandler(new PlayerLiveViews(
+            mock(ProfileRepositoryPort.class), mock(ProgressionRepositoryPort.class), mock(UnlockRepositoryPort.class),
+            repository, mock(LiveVersionPort.class), mock(QueryUpdateEmitter.class)));
 
     @Test
     void returnsPersistedRewards() {
